@@ -12,8 +12,8 @@
   --brand-red: #ff616d;
   --brand-gold: #f3b248;
   --page-gutter: clamp(1rem, 1.45vw + 0.7rem, 2.25rem);
-  --content-width: 1720px;
-  --header-height: 82px;
+  --content-width: 107.5rem;
+  --header-height: 5.125rem;
 }
 
 *,
@@ -249,6 +249,7 @@ body.nav-open .nav-scrim {
 
 .menu-toggle span {
   position: absolute;
+  top: 50%;
   left: 50%;
   width: 1.1rem;
   height: 2px;
@@ -1533,8 +1534,9 @@ main {
   }
 
   .sdk-card {
+    width: 100%;
+    height: auto;
     aspect-ratio: 1 / 1;
-    min-height: 23rem;
     border-radius: 1.8rem;
   }
 
@@ -1574,15 +1576,23 @@ main {
   }
 
   .audience-orbits {
-    inset: auto 1rem 1rem auto;
-    width: min(100%, 26rem);
-    height: 20rem;
-    opacity: 0.45;
+    position: relative;
+    inset: auto;
+    width: 100%;
+    height: 14rem;
+    margin-bottom: 0.8rem;
+    opacity: 0.9;
   }
 
   .orbit-dot {
-    width: 7.8rem;
+    width: 6.5rem;
   }
+  
+  .orbit-dot-1 { top: 1rem; left: 5%; }
+  .orbit-dot-2 { top: 0; left: 35%; }
+  .orbit-dot-3 { top: 1.5rem; right: 5%; }
+  .orbit-dot-4 { bottom: 1rem; left: 20%; }
+  .orbit-dot-5 { bottom: 0.5rem; right: 20%; }
 
   .download-section {
     min-height: 40rem;
@@ -1614,8 +1624,13 @@ main {
   }
 
   .footer-links {
-    justify-content: start;
+    justify-content: center;
     column-gap: 3rem;
+    text-align: center;
+  }
+
+  .footer-top {
+    text-align: center;
   }
 
   .site-footer {
@@ -1626,13 +1641,14 @@ main {
 
   .footer-bottom {
     grid-template-columns: 1fr;
-    justify-items: start;
+    justify-items: center;
+    gap: 1.5rem;
   }
 
   .footer-bottom > span,
   .footer-meta-links {
     grid-column: auto;
-    justify-self: start;
+    justify-self: center;
   }
 }
 
@@ -2020,5 +2036,13 @@ main {
     opacity: 1;
     filter: none;
     transform: none;
+  }
+}
+
+/* --- Ultra Large Screen Scaling --- */
+@media (min-width: 1720px) {
+  html {
+    /* Proportionally scale font-size for 2K, 4K, 8K screens */
+    font-size: calc(100vw / 107.5);
   }
 }
