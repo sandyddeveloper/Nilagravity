@@ -5,6 +5,8 @@
   // Parse query parameters for developer preview
   const urlParams = new URLSearchParams(window.location.search);
   const mockTimeSec = parseInt(urlParams.get('mock-time'), 10);
+  const sessionExpirySec = parseInt(urlParams.get('session-expiry-sec'), 10);
+  const sessionExpiryMs = !isNaN(sessionExpirySec) ? sessionExpirySec * 1000 : 30 * 60 * 1000;
 
   let finalTarget = targetDate;
   let isMocked = false;
@@ -28,122 +30,122 @@
 
   // --- 116 MULTILINGUAL BIRTHDAY WISHES DATABASE ---
   const wishes = [
-    { lang: "English", wish: "Happy Birthday, Indhu!", phonetic: "Happy Birthday, Indhu!" },
-    { lang: "Spanish", wish: "¡Feliz cumpleaños, Indhu!", phonetic: "Feh-lees koom-pleh-ahn-yohs, Indhu" },
-    { lang: "French", wish: "Joyeux anniversaire, Indhu !", phonetic: "Jwah-yuh zahn-nee-vehr-sehr, Indhu" },
-    { lang: "German", wish: "Alles Gute zum Geburtstag, Indhu!", phonetic: "Ah-les goo-teh tsoom geh-boorts-tahg, Indhu" },
-    { lang: "Italian", wish: "Buon compleanno, Indhu!", phonetic: "Bwon kom-pleh-ahn-no, Indhu" },
-    { lang: "Portuguese", wish: "Feliz aniversário, Indhu!", phonetic: "Feh-leez ah-nee-vehr-sah-ree-o, Indhu" },
-    { lang: "Dutch", wish: "Gefeliciteerd met je verjaardag, Indhu!", phonetic: "Heh-feh-lee-see-tehrt met ye ver-yar-dahg, Indhu" },
-    { lang: "Russian", wish: "С днём рождения, Индху!", phonetic: "S dnyom rozh-den-iya, Indhu" },
-    { lang: "Japanese", wish: "お誕生日おめでとう、インドゥ！", phonetic: "Ot-an-joh-bee o-meh-deh-toh, Indhu" },
-    { lang: "Korean", wish: "생일 축하해, 인두!", phonetic: "Saeng-il chook-ha-hae, Indhu" },
-    { lang: "Hindi", wish: "जन्मदिन की शुभकामनाएं, इन्धु!", phonetic: "Jan-ma-din kee shubh-kaam-na-yein, Indhu" },
-    { lang: "Tamil", wish: "பிறந்தநாள் வாழ்த்துகள், இந்து!", phonetic: "Pi-ran-dha-naal vaazh-thu-gal, Indhu" },
-    { lang: "Telugu", wish: "పుట్టినరోజు శుభాకాంక్షలు, ఇందు!", phonetic: "Put-ti-na-ro-ju shu-bha-kaank-sha-lu, Indhu" },
-    { lang: "Kannada", wish: "ಹುട്ടുহಬ್ಬದ ಶುಭಾಶಯಗಳು, ಇಂಧು!", phonetic: "Hut-tu-hab-ba-da shu-bhaa-sha-ya-ga-lu, Indhu" },
-    { lang: "Malayalam", wish: "ජന്മദിനാശംസകൾ, ഇന്ദു!", phonetic: "Jan-ma-di-naa-sham-sa-kal, Indhu" },
-    { lang: "Bengali", wish: "শুভ জন্মদিন, ইন্দু!", phonetic: "Shu-bho jon-mo-din, Indhu" },
-    { lang: "Marathi", wish: "वाढदिवसाच्या हार्दिक शुभेच्छा, इन्धु!", phonetic: "Vaadh-div-saa-chya haar-dik shu-bhech-chha, Indhu" },
-    { lang: "Gujarati", wish: "જન્મદિવસની શુભેચ્છा, ઈન્દુ!", phonetic: "Jan-ma-di-vas-nee shu-bhech-chha, Indhu" },
-    { lang: "Punjabi", wish: "ਜਨਮਦਿਨ ਮੁਬਾਰਕ, ਇੰਧੂ!", phonetic: "Ja-nam-din mu-baa-rak, Indhu" },
-    { lang: "Arabic", wish: "عيد ميلاد سعيد يا إندهو!", phonetic: "Eed mee-laad sah-eed ya Indhu" },
-    { lang: "Turkish", wish: "Doğum günün kutlu olsun, Indhu!", phonetic: "Doh-um gu-nun kut-lu ol-sun, Indhu" },
-    { lang: "Vietnamese", wish: "Chúc mừng sinh nhật, Indhu!", phonetic: "Chook mung sin nyut, Indhu" },
-    { lang: "Thai", wish: "สุขสันต์วันเกิดนะ นีลา!", phonetic: "Sook-san wan-gert na, Indhu" },
-    { lang: "Indonesian", wish: "Selamat ulang tahun, Indhu!", phonetic: "Se-lah-mat oo-lang tah-hoon, Indhu" },
-    { lang: "Tagalog", wish: "Maligayang kaarawan, Indhu!", phonetic: "Mah-lee-gah-yang kah-ah-rah-wan, Indhu" },
-    { lang: "Swahili", wish: "Heri ya siku ya kuzaliwa, Indhu!", phonetic: "Heh-ree ya see-koo ya koo-zah-lee-wah, Indhu" },
-    { lang: "Hebrew", wish: "יום הולדת שמح, ניله!", phonetic: "Yom hoo-leh-det sah-meh-ach, Indhu" },
-    { lang: "Greek", wish: "Χρόνια πολλά, Ίντχου!", phonetic: "Chro-nya pol-lah, Indhu" },
-    { lang: "Swedish", wish: "Grattis på födelsedagen, Indhu!", phonetic: "Grah-tis poh fur-del-seh-dah-gen, Indhu" },
-    { lang: "Norwegian", wish: "Gratulerer med dagen, Indhu!", phonetic: "Grah-too-leh-rer meh dah-gen, Indhu" },
-    { lang: "Danish", wish: "Tillykke med fødselsdagen, Indhu!", phonetic: "Til-luk-keh meh fud-sels-dah-gen, Indhu" },
-    { lang: "Finnish", wish: "Hyvää syntymäpäivää, Indhu!", phonetic: "Hoo-vah-ah soon-tu-mah-pie-vah-ah, Indhu" },
-    { lang: "Polish", wish: "Wszystkiego najlepszego z okazji urodzin, Indhu!", phonetic: "Vshist-kyeh-go nie-pleps-sheh-go z o-kah-zyee oo-rod-zeen, Indhu" },
-    { lang: "Czech", wish: "Všechno nejlepší k narozeninám, Indhu!", phonetic: "Vshekh-no ney-lep-shee k nah-ro-zeh-nee-nahm, Indhu" },
-    { lang: "Hungarian", wish: "Boldog születésnapot, Indhu!", phonetic: "Bol-dog soo-leh-teesh-nah-pot, Indhu" },
-    { lang: "Romanian", wish: "La mulți ani, Indhu!", phonetic: "Lah moolts ahny, Indhu" },
-    { lang: "Ukrainian", wish: "З днем народження, Ніла!", phonetic: "Z dnem nah-rod-zhen-nya, Indhu" },
-    { lang: "Malay", wish: "Selamat hari lahir, Indhu!", phonetic: "Se-lah-mat ha-ree lah-heer, Indhu" },
-    { lang: "Persian", wish: "تولدت مبارک، نیلا!", phonetic: "Tav-al-o-det mo-baa-rak, Indhu" },
-    { lang: "Irish", wish: "Lá breithe shona dhuit, Indhu!", phonetic: "Law breh-huh hun-ah gwitch, Indhu" },
-    { lang: "Welsh", wish: "Penblwydd hapus, Indhu!", phonetic: "Pen-blooydh hah-pis, Indhu" },
-    { lang: "Latin", wish: "Felix sit natalis dies, Indhu!", phonetic: "Feh-leeks sit nah-tah-lees dee-ehs, Indhu" },
-    { lang: "Hawaiian", wish: "Hauʻoli lā hānau, Indhu!", phonetic: "How-oh-lee lah hah-now, Indhu" },
-    { lang: "Maori", wish: "Rā whānau koa, Indhu!", phonetic: "Rah faa-now ko-ah, Indhu" },
-    { lang: "Zulu", wish: "Usuku lokuzalwa oluhle, Indhu!", phonetic: "Oo-soo-koo lo-koo-zahl-wah o-loo-hleh, Indhu" },
-    { lang: "Xhosa", wish: "Minentle mizele, Indhu!", phonetic: "Mee-nen-tleh mee-zeh-leh, Indhu" },
-    { lang: "Amharic", wish: "መልካም ልደት, ኒላ!", phonetic: "Mel-kam lee-det, Indhu" },
-    { lang: "Somali", wish: "Dhalasho wacan, Indhu!", phonetic: "Dhah-lah-sho wah-jan, Indhu" },
-    { lang: "Yoruba", wish: "Oriire ọjọ ibi, Indhu!", phonetic: "Oh-ree-reh oh-joh ee-bee, Indhu" },
-    { lang: "Igbo", wish: "Ezi ncheta ọmụmụ, Indhu!", phonetic: "Eh-zee n-cheh-tah oh-moo-moo, Indhu" },
-    { lang: "Afrikaans", wish: "Veels geluk met jou verjaarsdag, Indhu!", phonetic: "Feels heh-luk met yo fer-yahr-sdag, Indhu" },
-    { lang: "Esperanto", wish: "Feliĉan naskiĝtagon, Indhu!", phonetic: "Feh-lee-chan nas-keeg-tah-gon, Indhu" },
-    { lang: "Icelandic", wish: "Til hamingju með afmælið, Indhu!", phonetic: "Til hah-min-gyoo meth af-my-lith, Indhu" },
-    { lang: "Nepali", wish: "जन्मदिनको शुभकामना, इन्धु!", phonetic: "Jan-ma-din-ko shoo-bha-kaa-ma-naa, Indhu" },
-    { lang: "Sinhala", wish: "සුභ උපන්දිනයක් වේවා, ඉන්දු!", phonetic: "Su-bha oo-pan-di-na-yak wey-wah, Indhu" },
-    { lang: "Burmese", wish: "မွေးနေ့မှာ ပျော်ရွှင်ပါစေ, နီလာ!", phonetic: "Mway nay hmar pyaw shwin par say, Indhu" },
-    { lang: "Mongolian", wish: "Төрсөн өдрийн баяр хүргэе, Индху!", phonetic: "Tur-sun ud-riin bah-yar khur-geye, Indhu" },
-    { lang: "Tibetan", wish: "སྐྱེས་སྐར་ལ་བကྲ་ཤིས་བདེ་ལེགས།, ཨིན་དྷུ།", phonetic: "Kye-kar la ta-shi de-lek, Indhu" },
-    { lang: "Khmer", wish: "រីករាយថ្ងៃកំណើត, អ៊ិនធូ!", phonetic: "Reek-reay thngay kom-nerd, Indhu" },
-    { lang: "Lao", wish: "ສຸກສັນວັນເກີດ, ອິນທູ!", phonetic: "Sook-san van-geud, Indhu" },
-    { lang: "Galician", wish: "Feliz aniversario, Indhu!", phonetic: "Feh-leez ah-nee-vehr-sah-ryo, Indhu" },
-    { lang: "Scottish Gaelic", wish: "Co-là-breith math dhut, Indhu!", phonetic: "Co-lah-bray mah goot, Indhu" },
-    { lang: "Basque", wish: "Zorionak zuri, Indhu!", phonetic: "Zoh-ryoh-nahk zoo-ree, Indhu" },
-    { lang: "Catalan", wish: "Per molts anys, Indhu!", phonetic: "Per molts ahns, Indhu" },
-    { lang: "Albanian", wish: "Gëzuar ditëlindjen, Indhu!", phonetic: "Geh-zoo-ahr dee-tuh-leen-dyen, Indhu" },
-    { lang: "Macedonian", wish: "Среќен роденден, Индху!", phonetic: "Sreh-kyen ro-den-den, Indhu" },
-    { lang: "Bulgarian", wish: "Честит рожден ден, Индху!", phonetic: "Cheh-steet rozh-den den, Indhu" },
-    { lang: "Serbian", wish: "Срећан рођендан, Индху!", phonetic: "Sreh-tyan ro-jen-dan, Indhu" },
-    { lang: "Croatian", wish: "Sretan rođendan, Indhu!", phonetic: "Sreh-tahn ro-jen-dahn, Indhu" },
-    { lang: "Bosnian", wish: "Sretan rođendan, Indhu!", phonetic: "Sreh-tahn ro-jen-dahn, Indhu" },
-    { lang: "Slovenian", wish: "Vse najboljše za rojstni dan, Indhu!", phonetic: "Vseh nie-bol-sheh zah royst-nee dahn, Indhu" },
-    { lang: "Slovak", wish: "Všetko najlepšie k narodeninám, Indhu!", phonetic: "Vshet-ko nie-lep-sheh k nah-ro-zeh-nee-nahm, Indhu" },
-    { lang: "Estonian", wish: "Palju õnne sünnipäevaks, Indhu!", phonetic: "Pal-yoo oon-neh soon-nee-peh-vaks, Indhu" },
-    { lang: "Latvian", wish: "Daudz laimes dzimšanas dienā, Indhu!", phonetic: "Dowdz lie-mehs dzim-shah-nas dye-nah, Indhu" },
-    { lang: "Lithuanian", wish: "Su gimtadieniu, Indhu!", phonetic: "Soo gim-tah-dye-nyoo, Indhu" },
-    { lang: "Belarusian", wish: "З днём нараджэння, Ніла!", phonetic: "Z dnyom nah-rad-zhen-nya, Indhu" },
-    { lang: "Georgian", wish: "გილოცავ დაბადების დღეს, ნილა!", phonetic: "Gee-lot-sav dah-bah-deh-bees dgehs, Indhu" },
-    { lang: "Armenian", wish: "Ծնունդդ շնորհավոր, Նիլա!", phonetic: "Tsen-oondt shnor-hah-vor, Indhu" },
-    { lang: "Azerbaijani", wish: "Ad günün mübarək, Indhu!", phonetic: "Ahd goo-noon moo-bah-rak, Indhu" },
-    { lang: "Kazakh", wish: "Туған күніңізбен, Индху!", phonetic: "Too-ghan koo-nee-neez-ben, Indhu" },
-    { lang: "Kyrgyz", wish: "Туулган күнүңүз менен, Индху!", phonetic: "Too-ool-ghan koo-noong-ooz meh-neh-neh, Indhu" },
-    { lang: "Tajik", wish: "Зодрӯз муборак, Индху!", phonetic: "Zod-rooz moo-bo-rak, Indhu" },
-    { lang: "Uzbek", wish: "Tug'ilgan kuningiz bilan, Indhu!", phonetic: "Too-ool-gee-lan koo-nee-ngeez bee-lan, Indhu" },
-    { lang: "Turkmen", wish: "Doglan günüň gutly bolsun, Indhu!", phonetic: "Dohg-lahn goo-noon goot-lee bol-soon, Indhu" },
-    { lang: "Yiddish", wish: "אַ גליקלעכן געבורטסטאָג, נילאַ!", phonetic: "Ah glik-lekh-en geh-boort-stahg, Indhu" },
-    { lang: "Maltese", wish: "Għeluq sninek it-tajjeb, Indhu!", phonetic: "Eh-look-snee-nek eet-tie-yeb, Indhu" },
-    { lang: "Luxembourgish", wish: "Alles Guddes fir däi Gebuertsdag, Indhu!", phonetic: "Ah-les goo-des feer dy geh-boorts-tahg, Indhu" },
-    { lang: "Frisian", wish: "Lokkige jierdei, Indhu!", phonetic: "Lok-ki-geh yer-die, Indhu" },
-    { lang: "Corsican", wish: "Bon compleannu, Indhu!", phonetic: "Bon com-pleh-ahn-no, Indhu" },
-    { lang: "Breton", wish: "Deiz-ha-bloaz laouen dit, Indhu!", phonetic: "Days-hah-bloh-ahz lah-wen deet, Indhu" },
-    { lang: "Occitan", wish: "Bon aniversari, Indhu!", phonetic: "Bon ah-nee-vehr-sah-ree, Indhu" },
-    { lang: "Sardinian", wish: "Bonu anniversariu, Indhu!", phonetic: "Boh-noo ahn-nee-vehr-sah-ryoo, Indhu" },
-    { lang: "Romansh", wish: "Bel anniversari, Indhu!", phonetic: "Bel ah-nee-vehr-sah-ree, Indhu" },
-    { lang: "Faroese", wish: "Vælganga á føðingardegnum, Indhu!", phonetic: "Vail-gan-gah aw fuh-ing-ar-day-noon, Indhu" },
-    { lang: "Greenlandic", wish: "Inuuissiorluarit, Indhu!", phonetic: "Ee-noo-ees-see-or-loo-ah-reet, Indhu" },
-    { lang: "Samoan", wish: "Manuia lou aso fanau, Indhu!", phonetic: "Mah-nwee-ah lo-oo ah-so fah-now, Indhu" },
-    { lang: "Tongan", wish: "Ma'u ha 'aho fa'ele'i fiefia, Indhu!", phonetic: "Mah-oo hah ah-ho fah-eh-leh-ee fee-eh-fee-ah, Indhu" },
-    { lang: "Fijian", wish: "Marau na nomu siga ni sucu, Indhu!", phonetic: "Mah-row nah noh-moo see-gah nee soo-joo, Indhu" },
-    { lang: "Tahitian", wish: "Ia ora na i to oe mahana fanauraa, Indhu!", phonetic: "Yah oh-rah nah ee toh oy mah-hah-nah fah-now-rah-ah, Indhu" },
-    { lang: "Malagasy", wish: "Tratry ny tsingerin-taona nahaterahana, Indhu!", phonetic: "Trah-tree nee tseen-gehr-een tah-oo-nah nah-ha-teh-rah-ha-nah, Indhu" },
-    { lang: "Sundanese", wish: "Wilujeng tepang taun, Indhu!", phonetic: "Wee-loo-jeng teh-pang tah-oon, Indhu" },
-    { lang: "Javanese", wish: "Sugeng tanggap warsa, Indhu!", phonetic: "Soo-geng tang-gap wahr-sah, Indhu" },
-    { lang: "Balinese", wish: "Rahajeng wanti warsa, Indhu!", phonetic: "Rah-hah-jeng wan-tee wahr-sah, Indhu" },
-    { lang: "Tatar", wish: "Туган көнең белән, Индху!", phonetic: "Too-ghahn ku-ning beh-lan, Indhu" },
-    { lang: "Bashkir", wish: "Тыуған көнөң менән, Индху!", phonetic: "Too-ghahn ku-noon meh-nan, Indhu" },
-    { lang: "Chuvash", wish: "Çурална кун ячĕпе, Индху!", phonetic: "Soo-ral-nah koon yah-chuh-peh, Indhu" },
-    { lang: "Yakut", wish: "Төрөөбүт күҥҥүнэн, Индху!", phonetic: "Tuh-ruh-oobut kung-nu-nen, Indhu" },
-    { lang: "Kurdish", wish: "Rojbûna te pîroz be, Indhu!", phonetic: "Rozh-boo-nah teh pee-roz beh, Indhu" },
-    { lang: "Pashto", wish: "د زېږېدو ورځ دې مبارک شه، إندهو!", phonetic: "De zay-gay-do wraz day moo-baa-rak sha, Indhu" },
-    { lang: "Sindhi", wish: "ڄمڻ ڏينهن مبارڪ، إندهو!", phonetic: "Jah-man dhyan moo-baa-rak, Indhu" },
-    { lang: "Urdu", wish: "سالگرہ مبارک ہو، نیلا!", phonetic: "Saal-gi-rah moo-baa-rak ho, Indhu" },
-    { lang: "Sanskrit", wish: "जन्मदिवसस्य शुभकामनाः, इन्धु!", phonetic: "Jan-ma-dee-va-sas-ya shoo-bha-kaa-ma-naah, Indhu" },
-    { lang: "Latin (Alternate)", wish: "Fortunatam diem natalem, Indhu!", phonetic: "For-too-nah-tahm dee-em nah-tah-lem, Indhu" },
-    { lang: "Hawaiian (Alternate)", wish: "Hau'oli Lā Hānau e Indhu!", phonetic: "How-oh-lee lah hah-now eh Indhu" },
-    { lang: "Hmong", wish: "Zoo siab hnub yug, Indhu!", phonetic: "Zong shee-ah hnoo yoog, Indhu" },
-    { lang: "Samoan (Alternate)", wish: "Ia manuia lou aso fanau, Indhu!", phonetic: "Eeah mah-nwee-ah lo-oo ah-so fah-now, Indhu" }
+    { lang: "English", wish: "Happy Birthday, Indhu!" },
+    { lang: "Spanish", wish: "¡Feliz cumpleaños, Indhu!" },
+    { lang: "French", wish: "Joyeux anniversaire, Indhu !" },
+    { lang: "German", wish: "Alles Gute zum Geburtstag, Indhu!" },
+    { lang: "Italian", wish: "Buon compleanno, Indhu!" },
+    { lang: "Portuguese", wish: "Feliz aniversário, Indhu!" },
+    { lang: "Dutch", wish: "Gefeliciteerd met je verjaardag, Indhu!" },
+    { lang: "Russian", wish: "С днём рождения, Индху!" },
+    { lang: "Japanese", wish: "お誕生日おめでとう、インドゥ！" },
+    { lang: "Korean", wish: "생일 축하해, 인두!" },
+    { lang: "Hindi", wish: "जन्मदिन की शुभकामनाएं, इन्धु!" },
+    { lang: "Tamil", wish: "பிறந்தநாள் வாழ்த்துகள், இந்து!" },
+    { lang: "Telugu", wish: "పుట్టినరోజు శుభాకాంక్షలు, ఇందు!" },
+    { lang: "Kannada", wish: "ಹುട്ടുহಬ್ಬದ ಶುಭಾಶಯಗಳು, ಇಂಧು!" },
+    { lang: "Malayalam", wish: "ජന്മദിനാശംസകൾ, ഇന്ദു!" },
+    { lang: "Bengali", wish: "শুভ জন্মদিন, ইন্দু!" },
+    { lang: "Marathi", wish: "वाढदिवसाच्या हार्दिक शुभेच्छा, इन्धु!" },
+    { lang: "Gujarati", wish: "જન્મદિવસની શુભેચ્છा, ઈન્દુ!" },
+    { lang: "Punjabi", wish: "ਜਨਮਦਿਨ ਮੁਬਾਰਕ, ਇੰਧੂ!" },
+    { lang: "Arabic", wish: "عيد ميلاد سعيد يا إندهو!" },
+    { lang: "Turkish", wish: "Doğum günün kutlu olsun, Indhu!" },
+    { lang: "Vietnamese", wish: "Chúc mừng sinh nhật, Indhu!" },
+    { lang: "Thai", wish: "สุขสันต์วันเกิดนะ นีลา!" },
+    { lang: "Indonesian", wish: "Selamat ulang tahun, Indhu!" },
+    { lang: "Tagalog", wish: "Maligayang kaarawan, Indhu!" },
+    { lang: "Swahili", wish: "Heri ya siku ya kuzaliwa, Indhu!" },
+    { lang: "Hebrew", wish: "יום הולדת שמح, ניله!" },
+    { lang: "Greek", wish: "Χρόνια πολλά, Ίντχου!" },
+    { lang: "Swedish", wish: "Grattis på födelsedagen, Indhu!" },
+    { lang: "Norwegian", wish: "Gratulerer med dagen, Indhu!" },
+    { lang: "Danish", wish: "Tillykke med fødselsdagen, Indhu!" },
+    { lang: "Finnish", wish: "Hyvää syntymäpäivää, Indhu!" },
+    { lang: "Polish", wish: "Wszystkiego najlepszego z okazji urodzin, Indhu!" },
+    { lang: "Czech", wish: "Všechno nejlepší k narozeninám, Indhu!" },
+    { lang: "Hungarian", wish: "Boldog születésnapot, Indhu!" },
+    { lang: "Romanian", wish: "La mulți ani, Indhu!" },
+    { lang: "Ukrainian", wish: "З днем народження, Ніла!" },
+    { lang: "Malay", wish: "Selamat hari lahir, Indhu!" },
+    { lang: "Persian", wish: "تولدت مبارک، نیلا!" },
+    { lang: "Irish", wish: "Lá breithe shona dhuit, Indhu!" },
+    { lang: "Welsh", wish: "Penblwydd hapus, Indhu!" },
+    { lang: "Latin", wish: "Felix sit natalis dies, Indhu!" },
+    { lang: "Hawaiian", wish: "Hauʻoli lā hānau, Indhu!" },
+    { lang: "Maori", wish: "Rā whānau koa, Indhu!" },
+    { lang: "Zulu", wish: "Usuku lokuzalwa oluhle, Indhu!" },
+    { lang: "Xhosa", wish: "Minentle mizele, Indhu!" },
+    { lang: "Amharic", wish: "መልካም ልደት, ኒላ!" },
+    { lang: "Somali", wish: "Dhalasho wacan, Indhu!" },
+    { lang: "Yoruba", wish: "Oriire ọjọ ibi, Indhu!" },
+    { lang: "Igbo", wish: "Ezi ncheta ọmụmụ, Indhu!" },
+    { lang: "Afrikaans", wish: "Veels geluk met jou verjaarsdag, Indhu!" },
+    { lang: "Esperanto", wish: "Feliĉan naskiĝtagon, Indhu!" },
+    { lang: "Icelandic", wish: "Til hamingju með afmælið, Indhu!" },
+    { lang: "Nepali", wish: "जन्मदिनको शुभकामना, इन्धु!" },
+    { lang: "Sinhala", wish: "සුභ උපන්දිනයක් වේවා, ඉන්දු!" },
+    { lang: "Burmese", wish: "မွေးနေ့မှာ ပျော်ရွှင်ပါစေ, နီလာ!" },
+    { lang: "Mongolian", wish: "Төрсөн өдрийн баяр хүргэе, Индху!" },
+    { lang: "Tibetan", wish: "སྐྱེས་སྐར་ལ་བကྲ་ཤིས་བདེ་ལེགས།, ཨིན་དྷུ།" },
+    { lang: "Khmer", wish: "រីករាយថ្ងៃកំណើត, អ៊ិនធូ!" },
+    { lang: "Lao", wish: "ສຸກສັນວັນເກີດ, ອິນທູ!" },
+    { lang: "Galician", wish: "Feliz aniversario, Indhu!" },
+    { lang: "Scottish Gaelic", wish: "Co-là-breith math dhut, Indhu!" },
+    { lang: "Basque", wish: "Zorionak zuri, Indhu!" },
+    { lang: "Catalan", wish: "Per molts anys, Indhu!" },
+    { lang: "Albanian", wish: "Gëzuar ditëlindjen, Indhu!" },
+    { lang: "Macedonian", wish: "Среќен роденден, Индху!" },
+    { lang: "Bulgarian", wish: "Честит рожден ден, Индху!" },
+    { lang: "Serbian", wish: "Срећан рођендан, Индху!" },
+    { lang: "Croatian", wish: "Sretan rođendan, Indhu!" },
+    { lang: "Bosnian", wish: "Sretan rođendan, Indhu!" },
+    { lang: "Slovenian", wish: "Vse najboljše za rojstni dan, Indhu!" },
+    { lang: "Slovak", wish: "Všetko najlepšie k narodeninám, Indhu!" },
+    { lang: "Estonian", wish: "Palju õnne sünnipäevaks, Indhu!" },
+    { lang: "Latvian", wish: "Daudz laimes dzimšanas dienā, Indhu!" },
+    { lang: "Lithuanian", wish: "Su gimtadieniu, Indhu!" },
+    { lang: "Belarusian", wish: "З днём нараджэння, Ніла!" },
+    { lang: "Georgian", wish: "გილოცავ დაბადების დღეს, ნილა!" },
+    { lang: "Armenian", wish: "Ծնունդդ շնորհավոր, Նիլա!" },
+    { lang: "Azerbaijani", wish: "Ad günün mübarək, Indhu!" },
+    { lang: "Kazakh", wish: "Туған күніңізбен, Индху!" },
+    { lang: "Kyrgyz", wish: "Туулган күнүңүз менен, Индху!" },
+    { lang: "Tajik", wish: "Зодрӯз муборак, Индху!" },
+    { lang: "Uzbek", wish: "Tug'ilgan kuningiz bilan, Indhu!" },
+    { lang: "Turkmen", wish: "Doglan günüň gutly bolsun, Indhu!" },
+    { lang: "Yiddish", wish: "אַ גליקלעכן געבורטסטאָג, נילאַ!" },
+    { lang: "Maltese", wish: "Għeluq sninek it-tajjeb, Indhu!" },
+    { lang: "Luxembourgish", wish: "Alles Guddes fir däi Gebuertsdag, Indhu!" },
+    { lang: "Frisian", wish: "Lokkige jierdei, Indhu!" },
+    { lang: "Corsican", wish: "Bon compleannu, Indhu!" },
+    { lang: "Breton", wish: "Deiz-ha-bloaz laouen dit, Indhu!" },
+    { lang: "Occitan", wish: "Bon aniversari, Indhu!" },
+    { lang: "Sardinian", wish: "Bonu anniversariu, Indhu!" },
+    { lang: "Romansh", wish: "Bel anniversari, Indhu!" },
+    { lang: "Faroese", wish: "Vælganga á føðingardegnum, Indhu!" },
+    { lang: "Greenlandic", wish: "Inuuissiorluarit, Indhu!" },
+    { lang: "Samoan", wish: "Manuia lou aso fanau, Indhu!" },
+    { lang: "Tongan", wish: "Ma'u ha 'aho fa'ele'i fiefia, Indhu!" },
+    { lang: "Fijian", wish: "Marau na nomu siga ni sucu, Indhu!" },
+    { lang: "Tahitian", wish: "Ia ora na i to oe mahana fanauraa, Indhu!" },
+    { lang: "Malagasy", wish: "Tratry ny tsingerin-taona nahaterahana, Indhu!" },
+    { lang: "Sundanese", wish: "Wilujeng tepang taun, Indhu!" },
+    { lang: "Javanese", wish: "Sugeng tanggap warsa, Indhu!" },
+    { lang: "Balinese", wish: "Rahajeng wanti warsa, Indhu!" },
+    { lang: "Tatar", wish: "Туган көнең белән, Индху!" },
+    { lang: "Bashkir", wish: "Тыуған көнөң менән, Индху!" },
+    { lang: "Chuvash", wish: "Çурална кун ячĕпе, Индху!" },
+    { lang: "Yakut", wish: "Төрөөбүт күҥҥүнэн, Индху!" },
+    { lang: "Kurdish", wish: "Rojbûna te pîroz be, Indhu!" },
+    { lang: "Pashto", wish: "د زېږېدو ورځ دې مبارک شه، إندهو!" },
+    { lang: "Sindhi", wish: "ڄمڻ ڏينهن مبارڪ، إندهو!" },
+    { lang: "Urdu", wish: "سالگرہ مبارک ہو، نیلا!" },
+    { lang: "Sanskrit", wish: "जन्मदिवसस्य शुभकामनाः, इन्धु!" },
+    { lang: "Latin (Alternate)", wish: "Fortunatam diem natalem, Indhu!" },
+    { lang: "Hawaiian (Alternate)", wish: "Hau'oli Lā Hānau e Indhu!" },
+    { lang: "Hmong", wish: "Zoo siab hnub yug, Indhu!" },
+    { lang: "Samoan (Alternate)", wish: "Ia manuia lou aso fanau, Indhu!" }
   ];
 
   // --- CALCULATION LOGIC ---
@@ -182,7 +184,7 @@
       overflow: hidden !important;
       margin: 0 !important;
       padding: 0 !important;
-      background: #04060c !important;
+      background: #f7f6f2 !important;
     }
     .page-shell {
       display: none !important;
@@ -196,9 +198,13 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: radial-gradient(circle at 50% 50%, #0d1226 0%, #04060c 100%);
+      background:
+        radial-gradient(circle at 12% 14%, rgba(255, 141, 182, 0.11), transparent 30%),
+        radial-gradient(circle at 82% 10%, rgba(117, 145, 255, 0.09), transparent 28%),
+        radial-gradient(circle at 62% 80%, rgba(255, 184, 103, 0.1), transparent 24%),
+        linear-gradient(180deg, #fcfbf8 0%, #f7f6f2 100%);
       font-family: 'Outfit', 'Manrope', -apple-system, BlinkMacSystemFont, sans-serif;
-      color: #ffffff;
+      color: #11131a;
       z-index: 2147483647;
       overflow: hidden;
       box-sizing: border-box;
@@ -206,12 +212,21 @@
       text-align: center;
       transition: opacity 1.2s cubic-bezier(0.2, 1, 0.2, 1), transform 1.2s cubic-bezier(0.2, 1, 0.2, 1);
     }
+    .lock-page-noise {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      opacity: 0.46;
+      background-image: radial-gradient(circle, rgba(17, 19, 26, 0.18) 0.0425rem, transparent 0.04875rem);
+      background-size: 2.625rem 2.625rem;
+      z-index: 1;
+    }
     .lock-glow-orb {
       position: absolute;
       width: 45vw;
       height: 45vw;
       border-radius: 50%;
-      filter: blur(80px);
+      filter: blur(5rem);
       opacity: 0.12;
       z-index: 1;
       pointer-events: none;
@@ -243,7 +258,7 @@
       flex-direction: column;
       align-items: center;
       gap: 1.8rem;
-      max-width: 540px;
+      max-width: 33.75rem;
       width: 100%;
     }
     .lock-logo {
@@ -254,42 +269,42 @@
       font-weight: 700;
       letter-spacing: 0.08em;
       opacity: 0.95;
-      color: #ffffff;
+      color: #11131a;
       user-select: none;
     }
     .lock-icon-container {
       position: relative;
-      width: 90px;
-      height: 90px;
+      width: 5.625rem;
+      height: 5.625rem;
       display: grid;
       place-items: center;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5), inset 0 2px 0 rgba(255, 255, 255, 0.03);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.65);
+      border: 0.0625rem solid rgba(17, 19, 26, 0.08);
+      box-shadow: 0 1rem 3rem rgba(17, 19, 26, 0.06), inset 0 0.0625rem 0 rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(0.75rem);
+      -webkit-backdrop-filter: blur(0.75rem);
       cursor: pointer;
       transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
     }
     .lock-icon-container:hover {
       transform: scale(1.05);
       border-color: rgba(122, 85, 255, 0.4);
-      box-shadow: 0 20px 60px rgba(122, 85, 255, 0.25), inset 0 2px 0 rgba(255, 255, 255, 0.05);
+      box-shadow: 0 1.25rem 3.75rem rgba(122, 85, 255, 0.15), inset 0 0.0625rem 0 rgba(255, 255, 255, 0.95);
     }
     .lock-icon-pulse {
       position: absolute;
-      inset: -6px;
+      inset: -0.375rem;
       border-radius: 50%;
-      border: 1px dashed rgba(122, 85, 255, 0.35);
+      border: 0.0625rem dashed rgba(122, 85, 255, 0.35);
       animation: rotateDashed 25s linear infinite;
     }
     .lock-icon-glow {
       position: absolute;
       inset: 0;
       border-radius: 50%;
-      background: radial-gradient(circle, rgba(122, 85, 255, 0.3) 0%, transparent 70%);
-      filter: blur(5px);
+      background: radial-gradient(circle, rgba(122, 85, 255, 0.15) 0%, transparent 70%);
+      filter: blur(0.3125rem);
       opacity: 0;
       transition: opacity 0.5s ease;
     }
@@ -301,15 +316,15 @@
       100% { transform: rotate(360deg); }
     }
     #lock-svg {
-      width: 34px;
-      height: 34px;
+      width: 2.125rem;
+      height: 2.125rem;
       color: #ff6f6c;
       transition: all 0.5s cubic-bezier(0.2, 1, 0.2, 1);
-      filter: drop-shadow(0 0 10px rgba(255, 111, 108, 0.4));
+      filter: drop-shadow(0 0 0.5rem rgba(255, 111, 108, 0.25));
     }
     .lock-icon-container:hover #lock-svg {
       color: #ff8885;
-      filter: drop-shadow(0 0 15px rgba(255, 111, 108, 0.6));
+      filter: drop-shadow(0 0 0.75rem rgba(255, 111, 108, 0.4));
     }
     .lock-text-block {
       display: flex;
@@ -320,7 +335,7 @@
       font-size: clamp(1.6rem, 5vw, 2.2rem);
       font-weight: 700;
       letter-spacing: -0.04em;
-      background: linear-gradient(135deg, #ffffff 0%, #cbd8ff 100%);
+      background: linear-gradient(135deg, #11131a 0%, #3e485a 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
@@ -328,10 +343,10 @@
     }
     .lock-message {
       font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(17, 19, 26, 0.65);
       font-weight: 400;
       line-height: 1.5;
-      max-width: 440px;
+      max-width: 27.5rem;
       margin: 0 auto;
     }
     .countdown-grid {
@@ -339,7 +354,7 @@
       grid-template-columns: repeat(4, 1fr);
       gap: clamp(0.75rem, 2.5vw, 1.25rem);
       width: 100%;
-      max-width: 480px;
+      max-width: 30rem;
       margin-top: 0.2rem;
     }
     .countdown-item {
@@ -347,28 +362,28 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.65);
+      border: 0.0625rem solid rgba(17, 19, 26, 0.07);
       padding: clamp(0.85rem, 3vw, 1.4rem) 0.25rem;
       border-radius: 1.25rem;
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+      backdrop-filter: blur(1rem);
+      -webkit-backdrop-filter: blur(1rem);
+      box-shadow: 0 0.5rem 2rem rgba(17, 19, 26, 0.03), inset 0 0.0625rem 0 rgba(255, 255, 255, 0.9);
       transition: all 0.4s ease;
     }
     .countdown-item:hover {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: rgba(255, 255, 255, 0.1);
-      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.85);
+      border-color: rgba(17, 19, 26, 0.12);
+      transform: translateY(-0.125rem);
     }
     .countdown-val {
       font-size: clamp(1.8rem, 5.5vw, 2.8rem);
       font-weight: 800;
-      background: linear-gradient(135deg, #ffffff 0%, #cbd8ff 100%);
+      background: linear-gradient(135deg, #11131a 0%, #454f63 100%);
       -webkit-background-clip: text;
       background-clip: text;
       -webkit-text-fill-color: transparent;
-      text-shadow: 0 4px 20px rgba(203, 216, 255, 0.15);
+      text-shadow: 0 0.25rem 1.25rem rgba(17, 19, 26, 0.05);
       line-height: 1;
       margin-bottom: 0.35rem;
     }
@@ -376,12 +391,12 @@
       font-size: clamp(0.6rem, 1.8vw, 0.7rem);
       text-transform: uppercase;
       letter-spacing: 0.12em;
-      color: rgba(255, 255, 255, 0.35);
+      color: rgba(17, 19, 26, 0.45);
       font-weight: 600;
     }
     .lock-unlocked #lock-svg {
       color: #f3b248 !important;
-      filter: drop-shadow(0 0 20px rgba(243, 178, 72, 0.8)) !important;
+      filter: drop-shadow(0 0 1.25rem rgba(243, 178, 72, 0.8)) !important;
     }
     .lock-unlocked .lock-icon-pulse {
       border-color: rgba(243, 178, 72, 0.6) !important;
@@ -405,13 +420,13 @@
       position: absolute;
       top: 1.5rem;
       left: 50%;
-      transform: translateX(-50%) translateY(-25px);
+      transform: translateX(-50%) translateY(-1.5625rem);
       width: 90%;
-      max-width: 420px;
-      background: rgba(20, 24, 45, 0.6);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      max-width: 26.25rem;
+      background: rgba(255, 255, 255, 0.8);
+      border: 0.0625rem solid rgba(17, 19, 26, 0.08);
+      backdrop-filter: blur(1.25rem);
+      -webkit-backdrop-filter: blur(1.25rem);
       border-radius: 1.25rem;
       padding: 0.75rem 1.1rem;
       display: flex;
@@ -419,7 +434,7 @@
       gap: 0.9rem;
       z-index: 2147483646;
       cursor: pointer;
-      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+      box-shadow: 0 1rem 2.5rem rgba(17, 19, 26, 0.06), inset 0 0.0625rem 0 rgba(255, 255, 255, 0.95);
       opacity: 0;
       transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     }
@@ -428,35 +443,40 @@
       opacity: 1;
     }
     .ios-notification:hover {
-      background: rgba(25, 30, 55, 0.75);
-      border-color: rgba(255, 255, 255, 0.15);
-      transform: translateX(-50%) translateY(-2px);
+      background: rgba(255, 255, 255, 0.92);
+      border-color: rgba(17, 19, 26, 0.15);
+      transform: translateX(-50%) translateY(-0.125rem);
     }
     .noti-icon {
       position: relative;
       background: linear-gradient(135deg, #7a55ff 0%, #ff6f6c 100%);
       border-radius: 0.5rem;
-      width: 38px;
-      height: 38px;
+      width: 2.375rem;
+      height: 2.375rem;
       display: grid;
       place-items: center;
       flex-shrink: 0;
     }
+    .noti-svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      color: white;
+    }
     .noti-badge {
       position: absolute;
-      top: -4px;
-      right: -4px;
-      width: 10px;
-      height: 10px;
+      top: -0.25rem;
+      right: -0.25rem;
+      width: 0.625rem;
+      height: 0.625rem;
       background: #ff4a4a;
       border-radius: 50%;
-      border: 2px solid #0d1226;
-      box-shadow: 0 0 6px #ff4a4a;
+      border: 0.125rem solid #ffffff;
+      box-shadow: 0 0 0.375rem #ff4a4a;
       animation: pulseBadge 1.5s infinite alternate;
     }
     @keyframes pulseBadge {
-      0% { transform: scale(1); box-shadow: 0 0 4px #ff4a4a; }
-      100% { transform: scale(1.3); box-shadow: 0 0 10px #ff4a4a; }
+      0% { transform: scale(1); box-shadow: 0 0 0.25rem #ff4a4a; }
+      100% { transform: scale(1.3); box-shadow: 0 0 0.625rem #ff4a4a; }
     }
     .noti-content {
       flex: 1;
@@ -465,7 +485,7 @@
     .noti-title {
       font-size: 0.8rem;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.45);
+      color: rgba(17, 19, 26, 0.45);
       text-transform: uppercase;
       letter-spacing: 0.05em;
       margin-bottom: 0.15rem;
@@ -473,25 +493,27 @@
     .noti-message {
       font-size: 0.9rem;
       font-weight: 600;
-      color: #ffffff;
+      color: #11131a;
       line-height: 1.3;
     }
     .noti-chevron {
-      color: rgba(255, 255, 255, 0.3);
+      width: 1.125rem;
+      height: 1.125rem;
+      color: rgba(17, 19, 26, 0.35);
       transition: transform 0.3s;
     }
     .ios-notification:hover .noti-chevron {
-      color: #ffffff;
-      transform: translateX(2px);
+      color: #11131a;
+      transform: translateX(0.125rem);
     }
     
     /* Modals Overlay (Common) */
     .lock-modal-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(3, 5, 10, 0.82);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(248, 246, 241, 0.8);
+      backdrop-filter: blur(0.75rem);
+      -webkit-backdrop-filter: blur(0.75rem);
       z-index: 2147483647;
       display: flex;
       align-items: center;
@@ -506,15 +528,15 @@
       pointer-events: auto;
     }
     .lock-modal-card {
-      background: radial-gradient(circle at 50% 0%, #171d37 0%, #060912 100%);
-      border: 1px solid rgba(255, 255, 255, 0.07);
+      background: linear-gradient(180deg, #fcfbf8 0%, #f7f6f2 100%);
+      border: 0.0625rem solid rgba(17, 19, 26, 0.08);
       border-radius: 2rem;
-      box-shadow: 0 32px 80px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.03);
+      box-shadow: 0 2rem 5rem rgba(17, 19, 26, 0.12), inset 0 0.0625rem 0 rgba(255, 255, 255, 0.9);
       width: 100%;
-      max-width: 480px;
+      max-width: 30rem;
       display: flex;
       flex-direction: column;
-      transform: scale(0.92) translateY(20px);
+      transform: scale(0.92) translateY(1.25rem);
       transition: transform 0.4s cubic-bezier(0.2, 1, 0.2, 1);
       overflow: hidden;
       position: relative;
@@ -526,36 +548,40 @@
       padding: 1.75rem 2rem 1rem;
       text-align: center;
       position: relative;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      border-bottom: 0.0625rem solid rgba(17, 19, 26, 0.04);
     }
     .lock-modal-close-btn {
       position: absolute;
       top: 1.2rem;
       right: 1.2rem;
-      width: 32px;
-      height: 32px;
+      width: 2rem;
+      height: 2rem;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid rgba(255, 255, 255, 0.06);
-      color: rgba(255, 255, 255, 0.6);
+      background: rgba(17, 19, 26, 0.04);
+      border: 0.0625rem solid rgba(17, 19, 26, 0.06);
+      color: rgba(17, 19, 26, 0.6);
       display: grid;
       place-items: center;
       cursor: pointer;
       transition: all 0.3s;
     }
     .lock-modal-close-btn:hover {
-      background: rgba(255, 255, 255, 0.1);
-      color: #ffffff;
+      background: rgba(17, 19, 26, 0.08);
+      color: #11131a;
+    }
+    .lock-modal-close-btn svg {
+      width: 1.125rem;
+      height: 1.125rem;
     }
     .lock-modal-title {
       font-size: 1.4rem;
       font-weight: 700;
-      color: #ffffff;
+      color: #11131a;
       font-family: 'Outfit', sans-serif;
     }
     .lock-modal-subtitle {
       font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.5);
+      color: rgba(17, 19, 26, 0.55);
       margin-top: 0.3rem;
       line-height: 1.4;
     }
@@ -575,25 +601,25 @@
       font-size: 2.2rem;
       font-weight: 800;
       font-family: 'Outfit', monospace;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: rgba(255, 255, 255, 0.8);
+      border: 0.0625rem solid rgba(17, 19, 26, 0.1);
       padding: 0.8rem;
       border-radius: 1.25rem;
-      color: #ffffff;
+      color: #11131a;
       outline: none;
       box-sizing: border-box;
-      box-shadow: inset 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: inset 0 0.125rem 0.5rem rgba(17, 19, 26, 0.05);
       transition: all 0.3s;
     }
     .passkey-input:focus {
       border-color: rgba(122, 85, 255, 0.5);
-      box-shadow: 0 0 20px rgba(122, 85, 255, 0.2), inset 0 2px 8px rgba(0,0,0,0.5);
+      box-shadow: 0 0 1.25rem rgba(122, 85, 255, 0.1), inset 0 0.125rem 0.5rem rgba(17, 19, 26, 0.05);
     }
     .passkey-input::placeholder {
       font-size: 1.4rem;
       letter-spacing: 0;
       font-weight: 500;
-      color: rgba(255, 255, 255, 0.2);
+      color: rgba(17, 19, 26, 0.2);
     }
     .login-btn {
       width: 100%;
@@ -605,29 +631,29 @@
       border-radius: 1.25rem;
       padding: 1rem;
       cursor: pointer;
-      box-shadow: 0 12px 32px rgba(122, 85, 255, 0.3);
+      box-shadow: 0 0.75rem 2rem rgba(122, 85, 255, 0.25);
       transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
     }
     .login-btn:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 16px 40px rgba(122, 85, 255, 0.45);
+      transform: translateY(-0.125rem);
+      box-shadow: 0 1rem 2.5rem rgba(122, 85, 255, 0.4);
     }
     .login-btn:active {
       transform: translateY(0);
     }
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
-      15%, 45%, 75% { transform: translateX(-10px); }
-      30%, 60%, 90% { transform: translateX(10px); }
+      15%, 45%, 75% { transform: translateX(-0.625rem); }
+      30%, 60%, 90% { transform: translateX(0.625rem); }
     }
     .input-error {
       border-color: #ff4a4a !important;
-      box-shadow: 0 0 25px rgba(255, 74, 74, 0.35) !important;
+      box-shadow: 0 0 1.5625rem rgba(255, 74, 74, 0.35) !important;
       animation: shake 0.5s ease-in-out;
     }
     .input-success {
       border-color: #4aff4a !important;
-      box-shadow: 0 0 25px rgba(74, 255, 74, 0.4) !important;
+      box-shadow: 0 0 1.5625rem rgba(74, 255, 74, 0.4) !important;
     }
     
     /* Wishes List Drawer Specifics */
@@ -644,22 +670,22 @@
     
     /* Custom scrollbar */
     .wishes-modal-body::-webkit-scrollbar {
-      width: 6px;
+      width: 0.375rem;
     }
     .wishes-modal-body::-webkit-scrollbar-track {
-      background: rgba(255, 255, 255, 0.01);
+      background: rgba(17, 19, 26, 0.01);
     }
     .wishes-modal-body::-webkit-scrollbar-thumb {
-      background: rgba(255, 255, 255, 0.15);
-      border-radius: 10px;
+      background: rgba(17, 19, 26, 0.12);
+      border-radius: 0.625rem;
     }
     .wishes-modal-body::-webkit-scrollbar-thumb:hover {
-      background: rgba(255, 255, 255, 0.3);
+      background: rgba(17, 19, 26, 0.24);
     }
     
     .wish-card {
-      background: rgba(255, 255, 255, 0.015);
-      border: 1px solid rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.5);
+      border: 0.0625rem solid rgba(17, 19, 26, 0.05);
       border-radius: 1.25rem;
       padding: 1.2rem;
       display: flex;
@@ -669,14 +695,14 @@
       transition: all 0.3s;
     }
     .wish-card:hover {
-      background: rgba(255, 255, 255, 0.035);
-      border-color: rgba(255, 255, 255, 0.08);
-      transform: translateY(-2px);
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(17, 19, 26, 0.1);
+      transform: translateY(-0.125rem);
     }
     .wish-card.latest {
-      background: linear-gradient(135deg, rgba(122, 85, 255, 0.15) 0%, rgba(255, 111, 108, 0.15) 100%);
-      border: 1px solid rgba(255, 111, 108, 0.35);
-      box-shadow: 0 8px 24px rgba(255, 111, 108, 0.12);
+      background: linear-gradient(135deg, rgba(122, 85, 255, 0.06) 0%, rgba(255, 111, 108, 0.06) 100%);
+      border: 0.0625rem solid rgba(255, 111, 108, 0.35);
+      box-shadow: 0 0.5rem 1.5rem rgba(255, 111, 108, 0.08);
     }
     .wish-meta {
       display: flex;
@@ -691,40 +717,34 @@
       color: #ff6f6c;
       background: rgba(255, 111, 108, 0.12);
       padding: 0.25rem 0.6rem;
-      border-radius: 50px;
+      border-radius: 3.125rem;
     }
     .wish-card.latest .wish-day-badge {
       background: #ff6f6c;
-      color: #0d1226;
-      box-shadow: 0 2px 10px rgba(255, 111, 108, 0.4);
+      color: #ffffff;
+      box-shadow: 0 0.125rem 0.625rem rgba(255, 111, 108, 0.4);
     }
     .wish-lang-label {
       font-size: 0.75rem;
       font-weight: 700;
-      color: rgba(255, 255, 255, 0.4);
+      color: rgba(17, 19, 26, 0.45);
     }
     .wish-text-val {
       font-size: 1.45rem;
       font-weight: 700;
-      color: #ffffff;
+      color: #11131a;
       font-family: 'Outfit', sans-serif;
       margin: 0.4rem 0 0.1rem;
       line-height: 1.35;
     }
-    .wish-phonetic-val {
-      font-size: 0.88rem;
-      color: rgba(255, 255, 255, 0.55);
-      font-style: italic;
-      line-height: 1.3;
-    }
     
     /* Footer elements for passcode */
     .lock-passcode-trigger {
-      background: transparent;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      color: rgba(255, 255, 255, 0.45);
+      background: rgba(255, 255, 255, 0.5);
+      border: 0.0625rem solid rgba(17, 19, 26, 0.12);
+      color: rgba(17, 19, 26, 0.6);
       padding: 0.55rem 1.25rem;
-      border-radius: 50px;
+      border-radius: 3.125rem;
       font-size: 0.8rem;
       font-weight: 600;
       cursor: pointer;
@@ -736,10 +756,14 @@
       z-index: 10;
     }
     .lock-passcode-trigger:hover {
-      border-color: rgba(255, 255, 255, 0.35);
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.04);
-      transform: translateY(-1px);
+      border-color: rgba(17, 19, 26, 0.25);
+      color: #11131a;
+      background: rgba(255, 255, 255, 0.85);
+      transform: translateY(-0.0625rem);
+    }
+    .lock-passcode-trigger svg {
+      width: 0.9375rem;
+      height: 0.9375rem;
     }
   `;
   document.head.appendChild(style);
@@ -759,6 +783,7 @@
     container.id = 'lock-screen-container';
     container.innerHTML = `
       <canvas id="lock-particles-canvas"></canvas>
+      <div class="lock-page-noise"></div>
       <div class="lock-glow-orb orb-1"></div>
       <div class="lock-glow-orb orb-2"></div>
       
@@ -766,7 +791,7 @@
       <div class="ios-notification" id="wish-notification">
         <div class="noti-icon">
           <div class="noti-badge"></div>
-          <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: white;">
+          <svg class="noti-svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
             <polyline points="22,6 12,13 2,6"></polyline>
           </svg>
@@ -775,14 +800,14 @@
           <div class="noti-title">Santhosh Raj sent a message</div>
           <div class="noti-message" id="notification-text">Day ${daysUnlockedCount}/116 wishes unlocked! Tap to read.</div>
         </div>
-        <svg class="noti-chevron" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <svg class="noti-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
         </svg>
       </div>
 
       <div class="lock-content">
         <div class="lock-logo">
-          <svg viewBox="0 0 42 28" aria-hidden="true" style="width: 32px; height: auto;">
+          <svg viewBox="0 0 42 28" aria-hidden="true" style="width: 2rem; height: auto;">
             <defs>
               <linearGradient id="lockBrandGrad" x1="3.5" y1="23.5" x2="36.5" y2="4.5" gradientUnits="userSpaceOnUse">
                 <stop offset="0" stop-color="#2f6fff" />
@@ -794,7 +819,7 @@
             </defs>
             <path d="M3.31 22.41c1.98-5.55 5.32-10.38 10.02-14.49 1.58-1.36 3.12-2.04 4.62-2.04 1.87 0 3.53 1.05 4.98 3.16 1.11 1.63 2.4 4.46 3.86 8.48l4.53-11.37c.78-1.98 1.98-2.97 3.58-2.97 1.77 0 3.27 1.04 4.5 3.11 1.22 2.07 1.83 4.47 1.83 7.2 0 3.32-.75 6.13-2.24 8.42-.86 1.34-1.91 2.01-3.16 2.01-1.03 0-1.83-.38-2.42-1.14-.58-.76-1.2-2.14-1.86-4.13l-2.1-6.26-4.75 11.88c-.81 1.96-2.02 2.94-3.63 2.94-1.68 0-3.08-.97-4.18-2.91-1.11-1.94-2.29-4.86-3.53-8.75-.92-2.83-1.73-4.83-2.43-5.99-.69-1.16-1.42-1.74-2.18-1.74-1.42 0-3.05 1.15-4.88 3.46-1.82 2.31-3.3 5.03-4.43 8.15-.53 1.4-1.54 2.1-3.05 2.1-.8 0-1.5-.27-2.1-.81-.61-.54-.91-1.27-.91-2.18 0-.53.1-1.07.3-1.61Z" fill="url(#lockBrandGrad)" />
           </svg>
-          <span>Indhugravity</span>
+          <span>Nilagravity</span>
         </div>
         
         <div class="lock-icon-container" id="lock-emblem">
@@ -832,7 +857,7 @@
 
         <!-- Enter Passkey Trigger Button -->
         <button class="lock-passcode-trigger" id="passkey-trigger">
-          <svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
@@ -851,14 +876,14 @@
       <div class="lock-modal-card">
         <div class="lock-modal-header">
           <button class="lock-modal-close-btn" id="login-modal-close">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
-          <h3 class="lock-modal-title">Enter Vault Passkey</h3>
-          <p class="lock-modal-subtitle">Enter the secret passkey to access the website.</p>
+          <h3 class="lock-modal-title">Enter Wishes Passkey</h3>
+          <p class="lock-modal-subtitle" id="login-modal-subtitle">Enter the secret passkey to access daily wishes.</p>
         </div>
         <div class="login-modal-body">
           <input type="password" class="passkey-input" id="passkey-input" placeholder="••••••" maxlength="8" />
-          <button class="login-btn" id="login-submit-btn">Unlock Vault</button>
+          <button class="login-btn" id="login-submit-btn">Unlock Wishes</button>
         </div>
       </div>
     `;
@@ -872,7 +897,7 @@
       <div class="lock-modal-card">
         <div class="lock-modal-header">
           <button class="lock-modal-close-btn" id="wishes-modal-close">
-            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
           <h3 class="lock-modal-title">Daily Wishes</h3>
           <p class="lock-modal-subtitle" id="wishes-modal-subtitle">A new language wish unlocks daily (Day ${daysUnlockedCount}/116)</p>
@@ -898,15 +923,61 @@
     const lockMessage = document.getElementById('lock-message');
     const notificationPill = document.getElementById('wish-notification');
     const passkeyTrigger = document.getElementById('passkey-trigger');
-    
+
     const loginClose = document.getElementById('login-modal-close');
     const loginSubmit = document.getElementById('login-submit-btn');
     const passkeyInput = document.getElementById('passkey-input');
-    
+
     const wishesClose = document.getElementById('wishes-modal-close');
     const wishesBody = document.getElementById('wishes-modal-body');
 
     let isUnlocking = false;
+
+    // Helper to check if wishes session is still valid (not expired after 30 mins)
+    function checkWishesAuthorization() {
+      if (sessionStorage.getItem('nilagravity-wishes-authorized') !== 'true') {
+        return false;
+      }
+      const loginTime = sessionStorage.getItem('nilagravity-wishes-login-time');
+      if (!loginTime) {
+        return false;
+      }
+      const elapsed = Date.now() - parseInt(loginTime, 10);
+      if (elapsed >= sessionExpiryMs) {
+        sessionStorage.removeItem('nilagravity-wishes-authorized');
+        sessionStorage.removeItem('nilagravity-wishes-login-time');
+        return false;
+      }
+      return true;
+    }
+
+    // Periodically checks if the session has expired and auto-logs out
+    function checkSessionExpiry() {
+      if (sessionStorage.getItem('nilagravity-wishes-authorized') === 'true') {
+        const loginTime = sessionStorage.getItem('nilagravity-wishes-login-time');
+        if (loginTime) {
+          const elapsed = Date.now() - parseInt(loginTime, 10);
+          if (elapsed >= sessionExpiryMs) {
+            sessionStorage.removeItem('nilagravity-wishes-authorized');
+            sessionStorage.removeItem('nilagravity-wishes-login-time');
+
+            // Force close the wishes modal if it was open
+            if (wishesModal && wishesModal.classList.contains('open')) {
+              wishesModal.classList.remove('open');
+            }
+
+            // Update login modal subtitle to inform the user
+            const loginSubtitle = document.getElementById('login-modal-subtitle');
+            if (loginSubtitle) {
+              loginSubtitle.textContent = 'Session expired. Please enter passkey again.';
+              loginSubtitle.style.color = '#ff6f6c';
+            }
+            loginModal.classList.add('open');
+            passkeyInput.focus();
+          }
+        }
+      }
+    }
 
     // --- SLIDE-IN NOTIFICATION EFFECT ---
     setTimeout(() => {
@@ -937,6 +1008,9 @@
       hoursEl.textContent = String(h).padStart(2, '0');
       minsEl.textContent = String(m).padStart(2, '0');
       secsEl.textContent = String(s).padStart(2, '0');
+
+      // Auto-expire wishes session if active
+      checkSessionExpiry();
     }
 
     const countdownInterval = setInterval(updateCountdown, 1000);
@@ -1005,8 +1079,17 @@
 
     // --- PASSKEY LOGIN PANEL CONTROLLER ---
     passkeyTrigger.addEventListener('click', () => {
-      loginModal.classList.add('open');
-      passkeyInput.focus();
+      if (checkWishesAuthorization()) {
+        openWishesModal();
+      } else {
+        const loginSubtitle = document.getElementById('login-modal-subtitle');
+        if (loginSubtitle) {
+          loginSubtitle.textContent = 'Enter the secret passkey to access daily wishes.';
+          loginSubtitle.style.color = '';
+        }
+        loginModal.classList.add('open');
+        passkeyInput.focus();
+      }
     });
 
     loginClose.addEventListener('click', () => {
@@ -1035,17 +1118,30 @@
         passkeyInput.classList.add('input-success');
         passkeyInput.disabled = true;
         loginSubmit.disabled = true;
-        loginSubmit.textContent = 'Vault Decrypted!';
-        
+        loginSubmit.textContent = 'Access Granted!';
+
         setTimeout(() => {
           loginModal.classList.remove('open');
-          triggerUnlock();
+
+          // Reset form state for next potential trigger
+          passkeyInput.disabled = false;
+          loginSubmit.disabled = false;
+          loginSubmit.textContent = 'Unlock Wishes';
+          passkeyInput.value = '';
+          passkeyInput.classList.remove('input-success');
+
+          // Authorize session to read wishes and store login time
+          sessionStorage.setItem('nilagravity-wishes-authorized', 'true');
+          sessionStorage.setItem('nilagravity-wishes-login-time', Date.now().toString());
+
+          // Open the wishes modal directly
+          openWishesModal();
         }, 650);
       } else {
         passkeyInput.classList.add('input-error');
         passkeyInput.value = '';
         passkeyInput.focus();
-        
+
         setTimeout(() => {
           passkeyInput.classList.remove('input-error');
         }, 500);
@@ -1053,7 +1149,7 @@
     }
 
     loginSubmit.addEventListener('click', validateAndSubmitPasskey);
-    
+
     passkeyInput.addEventListener('keydown', (e) => {
       if (e.key === 'Enter') {
         validateAndSubmitPasskey();
@@ -1061,7 +1157,7 @@
     });
 
     // --- DAILY WISHES LIST BUILDER ---
-    notificationPill.addEventListener('click', () => {
+    function openWishesModal() {
       // Build scrollable list of wishes unlocked up to today
       let scrollHtml = '';
       for (let i = daysUnlockedCount - 1; i >= 0; i--) {
@@ -1075,13 +1171,26 @@
               <span class="wish-lang-label">${w.lang}</span>
             </div>
             <div class="wish-text-val">${w.wish}</div>
-            <div class="wish-phonetic-val">Translation / Pronunciation: ${w.phonetic}</div>
           </div>
         `;
       }
-      
+
       wishesBody.innerHTML = scrollHtml;
       wishesModal.classList.add('open');
+    }
+
+    notificationPill.addEventListener('click', () => {
+      if (checkWishesAuthorization()) {
+        openWishesModal();
+      } else {
+        const loginSubtitle = document.getElementById('login-modal-subtitle');
+        if (loginSubtitle) {
+          loginSubtitle.textContent = 'Enter the secret passkey to access daily wishes.';
+          loginSubtitle.style.color = '';
+        }
+        loginModal.classList.add('open');
+        passkeyInput.focus();
+      }
     });
 
     wishesClose.addEventListener('click', () => {
@@ -1094,6 +1203,15 @@
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
+
+      const palette = [
+        [47, 111, 255],   // blue
+        [91, 121, 255],   // medium blue
+        [115, 92, 255],   // violet
+        [255, 97, 109],   // red
+        [243, 178, 72],   // gold
+        [117, 132, 165]   // slate
+      ];
 
       let stars = [];
       let width = window.innerWidth;
@@ -1114,17 +1232,19 @@
 
       function buildStars() {
         stars = [];
+        const scaleFactor = width >= 1720 ? (width / 1720) : 1;
         const starCount = Math.max(60, Math.min(180, Math.floor((width * height) / 9500)));
         for (let i = 0; i < starCount; i++) {
           stars.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            r: Math.random() * 1.3 + 0.4,
-            speed: Math.random() * 0.04 + 0.015,
+            r: (Math.random() * 1.5 + 0.5) * scaleFactor,
+            speed: (Math.random() * 0.04 + 0.015) * scaleFactor,
             angle: Math.random() * Math.PI * 2,
             phase: Math.random() * Math.PI * 2,
             twinkleSpeed: Math.random() * 0.015 + 0.005,
-            glow: Math.random() > 0.8
+            glow: Math.random() > 0.8,
+            color: palette[Math.floor(Math.random() * palette.length)]
           });
         }
       }
@@ -1151,13 +1271,13 @@
 
           ctx.beginPath();
           ctx.arc(s.x, s.y, s.r, 0, Math.PI * 2);
-          ctx.fillStyle = `rgba(255, 255, 255, ${Math.max(0.08, alpha)})`;
+          ctx.fillStyle = `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, ${Math.max(0.08, alpha * 0.65)})`;
           ctx.fill();
 
           if (s.glow) {
             ctx.beginPath();
-            ctx.arc(s.x, s.y, s.r * 3.5, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(122, 85, 255, ${Math.max(0.01, alpha * 0.15)})`;
+            ctx.arc(s.x, s.y, s.r * 4, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(${s.color[0]}, ${s.color[1]}, ${s.color[2]}, ${Math.max(0.01, alpha * 0.12)})`;
             ctx.fill();
           }
         }

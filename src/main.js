@@ -186,28 +186,30 @@ function initParticleField({ containerSelector, canvasSelector, theme }) {
     const count = getCount();
     const radiusBase = Math.min(width, height) * (window.innerWidth < 640 ? config.radiusBaseMobile : config.radiusBaseDesktop);
     const radiusSpread = Math.max(width, height) * (window.innerWidth < 640 ? config.radiusSpreadMobile : config.radiusSpreadDesktop);
+    const scaleFactor = width >= 1720 ? (width / 1720) : 1;
 
     for (let i = 0; i < count; i += 1) {
       const radiusRatio = Math.pow(Math.random(), config.radiusExponent);
       const radius = radiusBase + radiusRatio * radiusSpread;
       const paletteIndex = pickPaletteIndex(config, radiusRatio);
       const color = config.palette[paletteIndex];
-      const thickness = config.thicknessMin + Math.random() * config.thicknessRange;
+      const thickness = (config.thicknessMin + Math.random() * config.thicknessRange) * scaleFactor;
+      const length = (config.lengthMin + Math.random() * config.lengthRange) * scaleFactor;
 
       particles.push({
         angle: Math.random() * Math.PI * 2,
-        speed: config.speedMin + Math.random() * config.speedRange,
+        speed: (config.speedMin + Math.random() * config.speedRange) * scaleFactor,
         radius,
         xScale: config.xScaleMin + Math.random() * config.xScaleRange,
         yScale: config.yScaleMin + Math.random() * config.yScaleRange,
-        driftX: (Math.random() - 0.5) * config.driftOffset,
-        driftY: (Math.random() - 0.5) * config.driftOffset,
-        waveAmount: config.waveMin + Math.random() * config.waveRange,
+        driftX: (Math.random() - 0.5) * config.driftOffset * scaleFactor,
+        driftY: (Math.random() - 0.5) * config.driftOffset * scaleFactor,
+        waveAmount: (config.waveMin + Math.random() * config.waveRange) * scaleFactor,
         waveSpeed: config.waveSpeedMin + Math.random() * config.waveSpeedRange,
         wavePhase: Math.random() * Math.PI * 2,
-        secondaryX: config.secondaryXMin + Math.random() * config.secondaryXRange,
-        secondaryY: config.secondaryYMin + Math.random() * config.secondaryYRange,
-        length: config.lengthMin + Math.random() * config.lengthRange,
+        secondaryX: (config.secondaryXMin + Math.random() * config.secondaryXRange) * scaleFactor,
+        secondaryY: (config.secondaryYMin + Math.random() * config.secondaryYRange) * scaleFactor,
+        length,
         thickness,
         alpha: config.alphaMin + Math.random() * config.alphaRange,
         twinkle: config.twinkleMin + Math.random() * config.twinkleRange,
@@ -226,12 +228,13 @@ function initParticleField({ containerSelector, canvasSelector, theme }) {
     stars.length = 0;
 
     const starCount = Math.max(80, Math.min(220, Math.round((width * height) / config.starDensityDivisor)));
+    const scaleFactor = width >= 1720 ? (width / 1720) : 1;
 
     for (let i = 0; i < starCount; i += 1) {
       stars.push({
         x: Math.random() * width,
         y: Math.random() * height,
-        size: 0.7 + Math.random() * 1.2,
+        size: (0.7 + Math.random() * 1.2) * scaleFactor,
         alpha: 0.22 + Math.random() * 0.55,
         twinkle: 0.001 + Math.random() * 0.003,
         phase: Math.random() * Math.PI * 2,
