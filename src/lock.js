@@ -1,6 +1,6 @@
 (function () {
-  // Target unlock date: September 16, 2026, 12:00:00 AM (local time)
-  const targetDate = new Date('2026-09-16T00:00:00');
+  // Target unlock date: September 15, 2026, 11:59:00 PM (local time)
+  const targetDate = new Date('2026-09-15T23:59:00');
 
   // Parse query parameters for developer preview
   const urlParams = new URLSearchParams(window.location.search);
@@ -145,21 +145,298 @@
     { lang: "Latin (Alternate)", wish: "Felix dies natalis in antecessum, Indhu!" },
     { lang: "Hawaiian (Alternate)", wish: "Hauʻoli lā hānau ma mua, Indhu!" },
     { lang: "Hmong", wish: "Zoo siab hnub yug ua ntej, Indhu!" },
-    { lang: "Samoan (Alternate)", wish: "Manuia lou aso fanau, Indhu!" }
   ];
 
+  // --- GOD MESSAGES DATABASE ---
+  const godMessages = [
+    "My dear Indhu, today I want you to know that you are never alone. I am always guiding your steps and watching over you with infinite love. Have a beautiful day!",
+    "Dearest Indhu, your heart is a vessel of pure light. Do not let any small shadows dim your brightness today. I have blessed you with courage.",
+    "Indhu, remember that you are stronger than any challenge that comes your way. Rest your worries in my hands; I am shielding your heart.",
+    "My child Indhu, take a deep breath. Today, I bless you with deep inner peace and stillness. You are exactly where you need to be.",
+    "Indhu, your smile brings so much warmth to the world. Today, I bless you with simple joys, sweet laughter, and gentle moments.",
+    "Dear Indhu, you are capable of achieving wonderful things. Walk forward with confidence, for my grace is paving your path.",
+    "Indhu, when you feel overwhelmed, remember that I am holding you close. I bless you with comfort and a peaceful, quiet heart today.",
+    "Dearest Indhu, I have painted the sky with hope for you today. Let your spirit soar. You are cherished beyond measure.",
+    "My dear Indhu, I bless you with a mind of clarity and a heart of compassion. Shine your light on the world today; you are ready.",
+    "Indhu, look at how far you have come. I am so proud of your resilient spirit. Today, I bless you with extra energy and vitality.",
+    "Indhu, every step you take with kindness is a step closer to my heart. I bless you with sweet relationships and harmony today.",
+    "My precious Indhu, do not worry about tomorrow. Focus on the beauty of today. I am taking care of your future.",
+    "Dear Indhu, let the warmth of my love melt away all your doubts. You are a masterpiece in the making.",
+    "Indhu, I bless your hands to create beauty, your mind to cultivate wisdom, and your heart to radiate peace.",
+    "Dearest Indhu, today I send you a gentle reminder: you are worthy of all the good things life has to offer.",
+    "My child Indhu, let your faith be bigger than your fears today. I am your shield and your guide.",
+    "Indhu, I bless your day with pleasant surprises, warm encounters, and a feeling of pure contentment.",
+    "Dear Indhu, when you speak, let it be with kindness. Your gentle words have the power to heal. I bless you with grace.",
+    "Indhu, may you find comfort in knowing that your tears are seen and your prayers are always heard. Rest in my love.",
+    "Dearest Indhu, today I bless you with the patience of a flowing river. Trust the journey and the timing of your life.",
+    "My dear Indhu, you are a rare gem. Never compare your path to others. Walk in your own light, blessed and protected.",
+    "Indhu, let your heart be filled with gratitude today, and watch how the universe responds with more reasons to be thankful.",
+    "Dear Indhu, I bless your home with peace, your heart with understanding, and your path with success.",
+    "Indhu, be gentle with yourself. You are growing, and growth takes time. I bless you with self-compassion today.",
+    "Dearest Indhu, today I stand beside you, cheering you on. Take courage and step into your power.",
+    "My child Indhu, let the noise of the world fade. Listen to the quiet whisper of my love inside your soul.",
+    "Indhu, I bless you with the strength to forgive, the wisdom to let go, and the freedom to move forward.",
+    "Dear Indhu, may your day be brightened by sweet moments that make you smile. You deserve all the happiness.",
+    "Indhu, I wrap you in a blanket of divine protection. No negativity can touch you today.",
+    "Dearest Indhu, I bless your mind with creativity and inspiration today. Let your thoughts flow beautifully.",
+    "My dear Indhu, you are a beacon of hope for many. Keep shining. I bless you with endless support.",
+    "Indhu, today I give you the gift of a calm mind. Let go of what you cannot control.",
+    "Dear Indhu, I bless you with a spirit that never gives up. You have the resilience to climb any mountain.",
+    "Indhu, your heart is a garden. Plant only seeds of love, joy, and peace today. I am watering them with my grace.",
+    "Dearest Indhu, today, know that you are deeply loved, protected, and cherished. Walk with a happy heart.",
+    "My child Indhu, I bless you with the wisdom to see the hidden lessons in every challenge.",
+    "Indhu, may your day be filled with warm laughter and the company of those who appreciate your beautiful soul.",
+    "Dear Indhu, trust the quiet voice inside you. That is my guidance leading you. Walk in faith.",
+    "Indhu, today I bless your body with health, your mind with tranquility, and your spirit with joy.",
+    "Dearest Indhu, you are a beautiful blessing to this world. Never forget your value. I am always with you.",
+    "My dear Indhu, I bless you with the courage to follow your dreams. Do not hold back; your potential is infinite.",
+    "Indhu, look at the beauty around you. I created it to remind you of my love. Have a peaceful day.",
+    "Dear Indhu, today I bless you with a heart that overflows with kindness. Your gentleness is your power.",
+    "Indhu, when you feel tired, come to me for rest. I will renew your strength and clear your path.",
+    "Dearest Indhu, I bless you with the ability to see the good in everyone and everything today.",
+    "My child Indhu, let my light guide you through any dark corners today. You are safe in my arms.",
+    "Indhu, I bless your day with smooth workflows, successful completions, and a feeling of achievement.",
+    "Dear Indhu, keep your eyes on the stars and your feet on the ground. I am backing your journey.",
+    "Indhu, may your heart be a sanctuary of peace today. No external storm can shake your inner calm.",
+    "Dearest Indhu, I bless you with deep contentment. May you find joy in the smallest of things today.",
+    "My dear Indhu, your path is unique and beautiful. Walk it with pride and a smile. I am with you.",
+    "Indhu, let your words be sweet and your actions be noble today. I am blessing every seed of kindness you sow.",
+    "Dear Indhu, today I send you the strength to stand tall. You are a warrior of light.",
+    "Indhu, may your mind be free from doubt and filled with positive expectations today. Good things are coming.",
+    "Dearest Indhu, I bless you with deep, restorative sleep tonight and an energetic, bright day tomorrow.",
+    "My child Indhu, you do not have to carry your burdens alone. Give them to me. I will carry them for you.",
+    "Indhu, I bless your relationships with trust, deep affection, and mutual understanding.",
+    "Dear Indhu, may you experience a miracle of peace in your heart today. All is well.",
+    "Indhu, let your enthusiasm shine today. I bless your efforts with fruitful results.",
+    "Dearest Indhu, you are my beloved child. My blessings are showered upon you constantly.",
+    "My dear Indhu, I bless you with the wisdom of discernment. Choose paths that bring peace to your soul.",
+    "Indhu, today I invite you to rest in my presence. Let my love reassure you of your worth.",
+    "Dear Indhu, walk with grace, speak with truth, and love with all your heart. I am always guiding you.",
+    "Indhu, I bless your day with clarity of purpose and the determination to achieve your goals.",
+    "Dearest Indhu, do not let temporary setbacks steal your joy. Your destiny is grand and protected.",
+    "My child Indhu, I bless you with a thankful heart. Gratitude is the key to my infinite abundance.",
+    "Indhu, may your mind be filled with serene thoughts, like a calm lake mirroring the sky.",
+    "Dear Indhu, I bless your journey with safety, your decisions with wisdom, and your life with love.",
+    "Indhu, you are a vessel of love. Share it freely today. I am constantly replenishing your heart.",
+    "Dearest Indhu, today I bless you with a spark of divine inspiration. Let your imagination soar.",
+    "My dear Indhu, remember that you are loved for exactly who you are. You do not need to prove anything to the world.",
+    "Indhu, let the light of hope shine bright in your eyes. I am clearing away all blockages from your path.",
+    "Dear Indhu, I bless you with a day filled with harmony, cooperation, and gentle success.",
+    "Indhu, you are shielded by my angels today. Walk with the confidence of a queen.",
+    "Dearest Indhu, today I bless your heart to feel light and free. Let go of past heavy thoughts.",
+    "My child Indhu, your life is a beautiful story that I am writing with love. Trust the author.",
+    "Indhu, may you find beauty in the unexpected and joy in the ordinary today. You are blessed.",
+    "Dear Indhu, I bless you with a sharp mind and a calm heart. You can handle anything today.",
+    "Indhu, my love for you is as deep as the ocean and as vast as the sky. Rest in this truth.",
+    "Dearest Indhu, today I bless you with sweet connections and laughter that heals the soul.",
+    "My dear Indhu, I bless your path with golden opportunities. Keep your heart open to receive.",
+    "Indhu, let your spirit be resilient and your mind be positive today. My grace is your constant shield.",
+    "Dear Indhu, I bless you with the courage to stand up for yourself and the kindness to support others.",
+    "Indhu, today I send you a gentle wind of peace. Let it wash over you and carry away all tension.",
+    "Dearest Indhu, you are my reflection of beauty and love in this world. Keep shining bright.",
+    "My child Indhu, I bless you with clarity to make the right choices and strength to act on them.",
+    "Indhu, may your day be as beautiful and glowing as a morning sunrise. You are blessed.",
+    "Dear Indhu, today I bless you with the gift of focus. May you complete all your tasks with ease.",
+    "Indhu, when you feel uncertain, look up. My stars are guiding you, and my hand is holding yours.",
+    "Dearest Indhu, I bless your heart with absolute trust. Everything is working out for your highest good.",
+    "My dear Indhu, I bless you with the strength to stand tall in your truth and shine your unique light.",
+    "Indhu, may your day be filled with warm sunshine, friendly faces, and a calm, peaceful heart.",
+    "Dear Indhu, I bless you with a spirit of adventure. Explore life with curiosity and joy.",
+    "Indhu, you are a precious soul. I watch over you day and night. Sleep in peace, wake in joy.",
+    "Dearest Indhu, today I bless your mind to think positive thoughts and your tongue to speak kind words.",
+    "My child Indhu, I bless you with the capacity to love deeply and be loved in return. Your heart is safe.",
+    "Indhu, I bless your day with fruitful conversations, happy memories, and absolute peace.",
+    "Dear Indhu, trust that I am alignment of your dreams. Keep believing in the magic of life.",
+    "Indhu, may your heart be a repository of love, joy, and kindness today. You are a blessing.",
+    "Dearest Indhu, today I bless you with a quiet confidence that needs no approval from others.",
+    "My dear Indhu, I bless your path with peaceful rivers, green pastures, and clear, blue skies.",
+    "Indhu, you are surrounded by my grace at all times. Walk with a light step and a happy spirit.",
+    "Dear Indhu, today I bless you with the strength to overcome any doubt and step into your full potential.",
+    "Indhu, may your mind be a sanctuary of clean, positive, and beautiful thoughts. I am guarding you.",
+    "Dearest Indhu, I bless your day with gentle breezes of joy and a persistent feeling of comfort.",
+    "My child Indhu, know that every prayer you whisper is heard and answered in the perfect way.",
+    "Indhu, I bless you with a heart that knows no fear and a spirit that knows no limits. Rise high.",
+    "Dear Indhu, I bless your home with warm laughter, your cupboard with plenty, and your heart with peace.",
+    "Indhu, today I send you extra strength to be patient and understanding. Your growth is beautiful.",
+    "Dearest Indhu, you are my cherished treasure. Walk through today knowing you have my ultimate blessing.",
+    "My dear Indhu, I bless your mind with clarity, your body with energy, and your path with success today.",
+    "Indhu, let your heart be filled with hope. The best days of your life are ahead of you. I am preparing them.",
+    "My dearest child Indhu, today on this final step of your countdown, I bless you with infinite love, eternal protection, and a future brighter than the stars. Walk into your birthday tomorrow with a glowing soul. I am with you always."
+  ];
+
+  // --- AUDIO SYNTHESIS ENGINE ---
+  function playTempleBell() {
+    try {
+      const AudioCtx = window.AudioContext || window.webkitAudioContext;
+      if (!AudioCtx) return;
+      const ctx = new AudioCtx();
+      const now = ctx.currentTime;
+      
+      const root = 392; // G4 pitch
+      // Ratios for bell harmonics
+      const partials = [0.5, 1, 1.2, 1.5, 2, 2.5, 3, 4.2];
+      const gains = [0.25, 0.3, 0.2, 0.15, 0.1, 0.08, 0.05, 0.03];
+      const decays = [3.0, 2.5, 1.8, 1.5, 1.2, 0.8, 0.6, 0.3];
+      
+      const masterGain = ctx.createGain();
+      masterGain.gain.setValueAtTime(MasterVolumeScale(), now);
+      masterGain.gain.exponentialRampToValueAtTime(0.001, now + 3.0);
+      masterGain.connect(ctx.destination);
+      
+      partials.forEach((ratio, i) => {
+        const osc = ctx.createOscillator();
+        const pGain = ctx.createGain();
+        
+        const freq = root * ratio + (i > 2 ? Math.random() * 5 - 2.5 : 0);
+        osc.frequency.value = freq;
+        
+        if (i === 0) {
+          osc.type = 'sine'; // deep hum
+        } else if (i < 4) {
+          osc.type = 'triangle';
+        } else {
+          osc.type = 'sine';
+        }
+        
+        pGain.gain.setValueAtTime(gains[i], now);
+        pGain.gain.exponentialRampToValueAtTime(0.0001, now + decays[i]);
+        
+        osc.connect(pGain);
+        pGain.connect(masterGain);
+        
+        osc.start(now);
+        osc.stop(now + decays[i] + 0.1);
+      });
+    } catch (e) {
+      console.error('Audio synthesis failed:', e);
+    }
+  }
+
+  // Helper helper to scale master volume
+  function MasterVolumeScale() {
+    return 0.35;
+  }
+
+  // --- FLOATING SPARKLES ---
+  function createGoldParticles(container) {
+    if (!container) return;
+    const count = 35;
+    for (let i = 0; i < count; i++) {
+      const particle = document.createElement('div');
+      particle.className = 'gold-sparkle';
+      
+      const size = Math.random() * 4 + 2;
+      const left = Math.random() * 100;
+      const delay = Math.random() * 3;
+      const duration = Math.random() * 2 + 2.5;
+      
+      particle.style.cssText = `
+        position: absolute;
+        bottom: -10px;
+        left: ${left}%;
+        width: ${size}px;
+        height: ${size}px;
+        background: radial-gradient(circle, #ffe9a6 0%, #f3b248 80%, transparent 100%);
+        border-radius: 50%;
+        opacity: ${Math.random() * 0.7 + 0.3};
+        pointer-events: none;
+        box-shadow: 0 0 ${size * 2}px #f3b248;
+        animation: floatSparkle ${duration}s ease-in-out infinite;
+        animation-delay: ${delay}s;
+      `;
+      container.appendChild(particle);
+    }
+  }
+
+  // --- DISPLAY BLESSING MODAL ---
+  function showGodBlessing(dayIndex) {
+    playTempleBell();
+
+    const msgIndex = (dayIndex - 1) % godMessages.length;
+    const messageText = godMessages[msgIndex];
+
+    const blessingModal = document.createElement('div');
+    blessingModal.id = 'god-blessing-modal';
+    blessingModal.className = 'lock-modal-overlay';
+    blessingModal.innerHTML = `
+      <div class="god-blessing-card">
+        <div class="god-particles-container" id="god-particles-container"></div>
+        <div class="god-halo"></div>
+        
+        <button class="lock-modal-close-btn god-close-btn" id="god-blessing-close">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+        </button>
+        
+        <div class="god-card-content">
+          <div class="god-aura-symbol">
+            <svg viewBox="0 0 100 100" class="divine-light-svg">
+              <defs>
+                <radialGradient id="divineGlow" cx="50%" cy="50%" r="50%">
+                  <stop offset="0%" stop-color="#fff5d6" stop-opacity="1" />
+                  <stop offset="30%" stop-color="#f3b248" stop-opacity="0.8" />
+                  <stop offset="70%" stop-color="#7a55ff" stop-opacity="0.3" />
+                  <stop offset="100%" stop-color="transparent" stop-opacity="0" />
+                </radialGradient>
+              </defs>
+              <circle cx="50%" cy="50%" r="48" fill="url(#divineGlow)" />
+              <path d="M 50 5 L 50 95 M 5 50 L 95 50 M 18 18 L 82 82 M 18 82 L 82 18" stroke="#ffe39e" stroke-width="1.5" stroke-linecap="round" opacity="0.6" />
+              <circle cx="50%" cy="50%" r="15" fill="none" stroke="#f3b248" stroke-width="2" />
+              <path d="M 50 15 L 50 25 M 50 75 L 50 85 M 15 50 L 25 50 M 75 50 L 85 50" stroke="#f3b248" stroke-width="2" stroke-linecap="round" />
+              <polygon points="50,38 53,45 61,45 55,50 57,58 50,53 43,58 45,50 39,45 47,45" fill="#ffffff" />
+            </svg>
+          </div>
+          
+          <h4 class="god-card-title">God's Blessing</h4>
+          <p class="god-card-day">Day ${dayIndex} of Countdown</p>
+          
+          <div class="god-message-body">
+            <p class="god-message-text">“${messageText}”</p>
+            <div class="god-signature">With infinite love and blessings ✨</div>
+          </div>
+          
+          <button class="god-btn" id="god-receive-btn">Receive Blessing</button>
+        </div>
+      </div>
+    `;
+    
+    document.body.appendChild(blessingModal);
+    createGoldParticles(blessingModal.querySelector('#god-particles-container'));
+    
+    setTimeout(() => {
+      blessingModal.classList.add('open');
+    }, 50);
+    
+    const closeBtn = blessingModal.querySelector('#god-blessing-close');
+    const receiveBtn = blessingModal.querySelector('#god-receive-btn');
+    
+    function closeModal() {
+      blessingModal.classList.remove('open');
+      setTimeout(() => {
+        blessingModal.remove();
+      }, 400);
+    }
+    
+    closeBtn.addEventListener('click', closeModal);
+    receiveBtn.addEventListener('click', closeModal);
+    blessingModal.addEventListener('click', (e) => {
+      if (e.target === blessingModal) {
+        closeModal();
+      }
+    });
+  }
+
   // --- CALCULATION LOGIC ---
-  // Calculates day index (1 to 116) relative to May 22, 2026.
+  // Calculates day index (1 to 113) relative to May 26, 2026.
   function getDaysElapsed() {
     const dayParam = urlParams.get('unlocked-days');
     if (dayParam) {
       const parsed = parseInt(dayParam, 10);
       if (!isNaN(parsed) && parsed >= 1) {
-        return Math.min(parsed, 116);
+        return Math.min(parsed, 113);
       }
     }
 
-    const start = new Date('2026-05-22T00:00:00');
+    const start = new Date('2026-05-26T00:00:00');
     const now = new Date();
 
     // Reset to local midnight to calculate difference in calendar days
@@ -172,7 +449,7 @@
     }
 
     const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)) + 1;
-    return Math.min(diffDays, 116);
+    return Math.min(diffDays, 113);
   }
 
   // --- PHASE 1: BLOCK RENDER ---
@@ -765,6 +1042,177 @@
       width: 0.9375rem;
       height: 0.9375rem;
     }
+
+    /* God Blessing Modal Styling */
+    .god-blessing-card {
+      background: radial-gradient(circle at 50% 30%, #1e113a 0%, #090314 100%);
+      border: 0.0625rem solid rgba(243, 178, 72, 0.45);
+      border-radius: 2.25rem;
+      box-shadow: 
+        0 2.5rem 6.25rem rgba(0, 0, 0, 0.85), 
+        inset 0 0.0625rem 0 rgba(255, 255, 255, 0.15),
+        0 0 30px rgba(243, 178, 72, 0.15);
+      width: 100%;
+      max-width: 28rem;
+      display: flex;
+      flex-direction: column;
+      transform: scale(0.9) translateY(1.875rem);
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      overflow: hidden;
+      position: relative;
+      padding: 2.5rem 2rem;
+      box-sizing: border-box;
+      text-align: center;
+    }
+    .lock-modal-overlay.open .god-blessing-card {
+      transform: scale(1) translateY(0);
+    }
+    .god-particles-container {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      overflow: hidden;
+      z-index: 1;
+    }
+    .god-halo {
+      position: absolute;
+      top: 5%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 13.75rem;
+      height: 13.75rem;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(243, 178, 72, 0.22) 0%, transparent 70%);
+      filter: blur(1.5625rem);
+      z-index: 2;
+      pointer-events: none;
+      animation: pulseHalo 5s ease-in-out infinite alternate;
+    }
+    @keyframes pulseHalo {
+      0% { transform: translateX(-50%) scale(0.9); opacity: 0.7; }
+      100% { transform: translateX(-50%) scale(1.15); opacity: 1; }
+    }
+    .god-close-btn {
+      background: rgba(255, 255, 255, 0.06) !important;
+      border: 0.0625rem solid rgba(255, 255, 255, 0.1) !important;
+      color: rgba(255, 255, 255, 0.6) !important;
+      z-index: 10;
+    }
+    .god-close-btn:hover {
+      background: rgba(255, 255, 255, 0.15) !important;
+      color: #ffffff !important;
+    }
+    .god-card-content {
+      position: relative;
+      z-index: 3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .god-aura-symbol {
+      width: 7.5rem;
+      height: 7.5rem;
+      margin-bottom: 1.2rem;
+      display: grid;
+      place-items: center;
+      filter: drop-shadow(0 0 1.25rem rgba(243, 178, 72, 0.5));
+    }
+    .divine-light-svg {
+      width: 100%;
+      height: 100%;
+      animation: slowRotate 30s linear infinite;
+    }
+    @keyframes slowRotate {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .god-card-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: #ffe39e;
+      font-family: 'Outfit', sans-serif;
+      margin: 0;
+      letter-spacing: -0.02em;
+      text-shadow: 0 0 10px rgba(243, 178, 72, 0.3);
+    }
+    .god-card-day {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.55);
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      margin: 0.3rem 0 1.8rem;
+      font-weight: 600;
+    }
+    .god-message-body {
+      background: rgba(255, 255, 255, 0.04);
+      border: 0.0625rem solid rgba(255, 255, 255, 0.05);
+      padding: 1.6rem 1.4rem;
+      border-radius: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      box-shadow: inset 0 0.125rem 0.625rem rgba(0, 0, 0, 0.2);
+    }
+    .god-message-text {
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: #f7f6f2;
+      font-family: 'Outfit', Georgia, serif;
+      font-style: italic;
+      margin: 0 0 1rem;
+    }
+    .god-signature {
+      font-size: 0.85rem;
+      color: #ffd685;
+      font-weight: 700;
+      font-family: 'Outfit', sans-serif;
+    }
+    .god-btn {
+      width: 100%;
+      background: linear-gradient(135deg, #f3b248 0%, #e09927 100%);
+      color: #0c051a;
+      border: none;
+      font-size: 1.05rem;
+      font-weight: 800;
+      border-radius: 1.25rem;
+      padding: 1rem;
+      cursor: pointer;
+      box-shadow: 0 0.75rem 2rem rgba(243, 178, 72, 0.25);
+      transition: all 0.3s cubic-bezier(0.2, 1, 0.2, 1);
+      letter-spacing: 0.02em;
+    }
+    .god-btn:hover {
+      transform: translateY(-0.125rem);
+      box-shadow: 0 1rem 2.5rem rgba(243, 178, 72, 0.4);
+      background: linear-gradient(135deg, #ffe9c4 0%, #f3b248 100%);
+    }
+    .god-btn:active {
+      transform: translateY(0);
+    }
+    .gold-sparkle {
+      position: absolute;
+      bottom: -10px;
+      background: radial-gradient(circle, #ffe9a6 0%, #f3b248 80%, transparent 100%);
+      border-radius: 50%;
+      pointer-events: none;
+      box-shadow: 0 0 8px #f3b248;
+      animation: floatSparkle 3s ease-in-out infinite;
+    }
+    @keyframes floatSparkle {
+      0% {
+        transform: translateY(0) scale(1) rotate(0deg);
+        opacity: 0;
+      }
+      20% {
+        opacity: 0.8;
+      }
+      80% {
+        opacity: 0.8;
+      }
+      100% {
+        transform: translateY(-280px) scale(0) rotate(360deg);
+        opacity: 0;
+      }
+    }
   `;
   document.head.appendChild(style);
 
@@ -798,7 +1246,7 @@
         </div>
         <div class="noti-content">
           <div class="noti-title">Santhosh Raj sent a message</div>
-          <div class="noti-message" id="notification-text">Day ${daysUnlockedCount}/116 wishes unlocked! Tap to read.</div>
+          <div class="noti-message" id="notification-text">Day ${daysUnlockedCount}/113 wishes unlocked! Tap to read.</div>
         </div>
         <svg class="noti-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
           <polyline points="9 18 15 12 9 6"></polyline>
@@ -900,7 +1348,7 @@
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
           </button>
           <h3 class="lock-modal-title">Daily Wishes</h3>
-          <p class="lock-modal-subtitle" id="wishes-modal-subtitle">A new language wish unlocks daily (Day ${daysUnlockedCount}/116)</p>
+          <p class="lock-modal-subtitle" id="wishes-modal-subtitle">A new language wish unlocks daily (Day ${daysUnlockedCount}/113)</p>
         </div>
         <div class="wishes-modal-body" id="wishes-modal-body">
           <!-- Scrollable list injected dynamically -->
@@ -1183,7 +1631,7 @@
         if (!w) continue;
         const isLatest = (i === daysUnlockedCount - 1);
         scrollHtml += `
-          <div class="wish-card ${isLatest ? 'latest' : ''}">
+          <div class="wish-card ${isLatest ? 'latest' : ''}" data-day-index="${i + 1}" style="cursor: pointer;">
             <div class="wish-meta">
               <span class="wish-day-badge">Day ${i + 1}</span>
               <span class="wish-lang-label">${w.lang}</span>
@@ -1196,6 +1644,17 @@
       wishesBody.innerHTML = scrollHtml;
       wishesModal.classList.add('open');
     }
+
+    // Event delegation on wishes list clicks to show God's blessing
+    wishesBody.addEventListener('click', (e) => {
+      const card = e.target.closest('.wish-card');
+      if (card) {
+        const dayIdx = parseInt(card.getAttribute('data-day-index'), 10);
+        if (!isNaN(dayIdx)) {
+          showGodBlessing(dayIdx);
+        }
+      }
+    });
 
     notificationPill.addEventListener('click', () => {
       if (checkWishesAuthorization()) {
