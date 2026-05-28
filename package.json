@@ -3,9 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node server.js",
     "build:css": "postcss src/styles.css -o src/styles.build.css",
-    "build": "npm run build:css"
+    "build": "npm run build:css",
+    "vercel-build": "npm run build"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
@@ -14,7 +14,6 @@
     "tailwindcss": "^3.0.0"
   },
   "dependencies": {
-    "express": "^5.2.1",
     "nodemailer": "^8.0.7"
   }
 }

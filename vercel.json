@@ -1,3 +1,20 @@
 {
-  "cleanUrls": true
+  "version": 3,
+  "cleanUrls": true,
+  "builds": [
+    {
+      "src": "api/**/*.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/(.*)",
+      "dest": "/api/$1.js"
+    },
+    {
+      "src": "(.*)",
+      "dest": "/$1"
+    }
+  ]
 }
