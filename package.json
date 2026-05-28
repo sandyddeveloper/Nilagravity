@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:css": "postcss src/styles.css -o src/styles.build.css",
+    "build": "npm run build:css"
   },
   "devDependencies": {
     "autoprefixer": "^10.4.0",
