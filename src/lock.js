@@ -271,25 +271,25 @@
       if (!AudioCtx) return;
       const ctx = new AudioCtx();
       const now = ctx.currentTime;
-      
+
       const root = 392; // G4 pitch
       // Ratios for bell harmonics
       const partials = [0.5, 1, 1.2, 1.5, 2, 2.5, 3, 4.2];
       const gains = [0.25, 0.3, 0.2, 0.15, 0.1, 0.08, 0.05, 0.03];
       const decays = [3.0, 2.5, 1.8, 1.5, 1.2, 0.8, 0.6, 0.3];
-      
+
       const masterGain = ctx.createGain();
       masterGain.gain.setValueAtTime(MasterVolumeScale(), now);
       masterGain.gain.exponentialRampToValueAtTime(0.001, now + 3.0);
       masterGain.connect(ctx.destination);
-      
+
       partials.forEach((ratio, i) => {
         const osc = ctx.createOscillator();
         const pGain = ctx.createGain();
-        
+
         const freq = root * ratio + (i > 2 ? Math.random() * 5 - 2.5 : 0);
         osc.frequency.value = freq;
-        
+
         if (i === 0) {
           osc.type = 'sine'; // deep hum
         } else if (i < 4) {
@@ -297,13 +297,13 @@
         } else {
           osc.type = 'sine';
         }
-        
+
         pGain.gain.setValueAtTime(gains[i], now);
         pGain.gain.exponentialRampToValueAtTime(0.0001, now + decays[i]);
-        
+
         osc.connect(pGain);
         pGain.connect(masterGain);
-        
+
         osc.start(now);
         osc.stop(now + decays[i] + 0.1);
       });
@@ -324,12 +324,12 @@
     for (let i = 0; i < count; i++) {
       const particle = document.createElement('div');
       particle.className = 'gold-sparkle';
-      
+
       const size = Math.random() * 4 + 2;
       const left = Math.random() * 100;
       const delay = Math.random() * 3;
       const duration = Math.random() * 2 + 2.5;
-      
+
       particle.style.cssText = `
         position: absolute;
         bottom: -10px;
@@ -398,24 +398,24 @@
         </div>
       </div>
     `;
-    
+
     document.body.appendChild(blessingModal);
     createGoldParticles(blessingModal.querySelector('#god-particles-container'));
-    
+
     setTimeout(() => {
       blessingModal.classList.add('open');
     }, 50);
-    
+
     const closeBtn = blessingModal.querySelector('#god-blessing-close');
     const receiveBtn = blessingModal.querySelector('#god-receive-btn');
-    
+
     function closeModal() {
       blessingModal.classList.remove('open');
       setTimeout(() => {
         blessingModal.remove();
       }, 400);
     }
-    
+
     closeBtn.addEventListener('click', closeModal);
     receiveBtn.addEventListener('click', closeModal);
     blessingModal.addEventListener('click', (e) => {
